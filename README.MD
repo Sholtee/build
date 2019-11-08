@@ -62,8 +62,19 @@ In the followings you MUST use the **SECURED** values of the tokens above
 - Copy the [docfx.json](https://github.com/Sholtee/build/blob/master/samples/PERF/docfx.json ) and [index.md](https://github.com/Sholtee/build/blob/master/samples/PERF/index.md ) to the source folder of your benchmark project (`PERF` by default). In `index.md` modify the URLs.  
 - [GitIgnore](https://git-scm.com/docs/gitignore ) everything in your "scripts" folder except the project.json in the root (the submodule is responsible for keeping script files up to date).
 - GitIgnore the `Artifacts` folder in your project root.
+- GitIgnore `manifest.json` on your `gh-pages` branch.
+- Create an `index.html` on your `gh-pages` branch:
+  ```html
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta http-equiv="Refresh" content="0; url=https://YourName.github.io/YourProject/doc/">
+    </head>
+  </html>  
+  ```
 - Create a project icon (named `icon.png`) in your project root.
-
+## Artifacts`
+Will be placed on your `gh-pages` branch under the `doc` and `perf` folder
 ## Add status badges (to your README.MD)
 - [AppVeyor](https://www.appveyor.com/docs/status-badges/ )
 - [NuGet](https://buildstats.info/ )
