@@ -22,6 +22,13 @@ In the followings you MUST use the **SECURED** values of the tokens above
 - Add the followings to the `csproj` of your project (under the `Project` node):
   ```xml
   <ItemGroup>
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+    <PackageReference Include="NunitXml.TestLogger" Version="2.1.41" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <None Remove="docfx.json" />
     <None Remove="index.md" />
   </ItemGroup>
@@ -41,6 +48,18 @@ In the followings you MUST use the **SECURED** values of the tokens above
   </PropertyGroup>  
   ```
 - Copy the [docfx.json](https://github.com/Sholtee/build/blob/master/samples/API/docfx.json ) and [index.md](https://github.com/Sholtee/build/blob/master/samples/API/index.md ) to the source folder of your project (`SRC` by default). In `docfx.json` modify `csproj` name and title, in `index.md` modify the URLs.
+- Add the followings to the `csproj` of your benchmark project (under the `Project` node):
+  ```xml
+  <ItemGroup>
+    <None Remove="docfx.json" />
+    <None Remove="index.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
+  </ItemGroup>
+  ```
+- Copy the [docfx.json](https://github.com/Sholtee/build/blob/master/samples/PERF/docfx.json ) and [index.md](https://github.com/Sholtee/build/blob/master/samples/PERF/index.md ) to the source folder of your benchmark project (`PERF` by default). In `index.md` modify the URLs.  
 - [GitIgnore](https://git-scm.com/docs/gitignore ) everything in your "scripts" folder except the project.json in the root (the submodule is responsible for keeping script files up to date).
 - GitIgnore the `Artifacts` folder in your project root.
 - Create a project icon (named `icon.png`) in your project root.
