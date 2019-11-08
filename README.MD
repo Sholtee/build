@@ -58,6 +58,12 @@ In the followings you MUST use the **SECURED** values of the tokens above
 - Copy the [docfx.json](https://github.com/Sholtee/build/blob/master/samples/API/docfx.json ) and [index.md](https://github.com/Sholtee/build/blob/master/samples/API/index.md ) to the source folder of your project (`SRC` by default). In `docfx.json` modify `csproj` name and title, in `index.md` modify the URLs.
 - Add/merge the followings to the `csproj` of your benchmark project (under the `Project` node):
   ```xml
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <AssemblyName>YourProject.Perf</AssemblyName>
+  </PropertyGroup>
+  
   <ItemGroup>
     <None Remove="docfx.json" />
     <None Remove="index.md" />
@@ -68,6 +74,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
   </ItemGroup>
   ```
 - Copy the [docfx.json](https://github.com/Sholtee/build/blob/master/samples/PERF/docfx.json ) and [index.md](https://github.com/Sholtee/build/blob/master/samples/PERF/index.md ) to the source folder of your benchmark project (`PERF` by default). In `index.md` modify the URLs.  
+- Your project containing the unit tests (`YourProject.Test`) should target `netcoreapp2.2`
 - [GitIgnore](https://git-scm.com/docs/gitignore ) everything in your "scripts" folder except the project.json in the root (the submodule is responsible for keeping script files up to date).
 - GitIgnore the `Artifacts` folder in your project root.
 - GitIgnore `manifest.json` on your `gh-pages` branch.
