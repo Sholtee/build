@@ -19,8 +19,16 @@ In the followings you MUST use the **SECURED** values of the tokens above
 ## Setup your project
 - Create the `appveyor.yml` file in your project root from the [sample](https://github.com/Sholtee/build/blob/master/samples/appveyor.yml ). You should modify only the values of the environment variables (marked with `xXx` in the sample).
 - Create the `project.json` file in your "scripts" folder from the [sample](https://github.com/Sholtee/build/blob/master/samples/project.json ). Your project should consist of an `app` project, a `tests` project and a `perftests` project.
-- Add the followings to the `csproj` of your project (under the `Project` node):
+- Add/merge the followings to the `csproj` of your project (under the `Project` node):
   ```xml
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.6;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <Company>Your Company</Company>
+    <Authors>Your Name</Authors>
+    <Version>1.0.0-preview1</Version>
+    <AssemblyName>YourAssembly</AssemblyName>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="nunit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
@@ -48,7 +56,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
   </PropertyGroup>  
   ```
 - Copy the [docfx.json](https://github.com/Sholtee/build/blob/master/samples/API/docfx.json ) and [index.md](https://github.com/Sholtee/build/blob/master/samples/API/index.md ) to the source folder of your project (`SRC` by default). In `docfx.json` modify `csproj` name and title, in `index.md` modify the URLs.
-- Add the followings to the `csproj` of your benchmark project (under the `Project` node):
+- Add/merge the followings to the `csproj` of your benchmark project (under the `Project` node):
   ```xml
   <ItemGroup>
     <None Remove="docfx.json" />
