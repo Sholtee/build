@@ -1,0 +1,62 @@
+#############################################################################
+#                                                                           #
+# appveyor.yml                                                              #
+#                                                                           #
+# Author: Denes Solti                                                       #
+#                                                                           #
+#############################################################################
+
+# common configuration for ALL branches
+image: Visual Studio 2019
+
+environment:
+  COVERALLS_REPO_TOKEN:  
+    secure: xXx
+  GITHUB_REPO_TOKEN:
+    secure: xXx
+  NUGET_REPO_TOKEN:
+    secure: xXx
+  GITHUB_EMAIL:
+    secure: xXx
+
+branches:
+  # blacklist
+  except:
+    - gh-pages
+
+# prevent MSBuild from running
+build: off
+
+before_test:
+  - ps: |
+      Set-Location -path ".\scripts"
+      .(".\includes.ps1")
+      Get-SysInfo
+
+test_script:
+  - ps: Test
+
+after_test:
+  - ps: Push-Test-Results
+
+# after build failure or success
+on_finish:
+  - ps: |
+      Push-Artifact "*.txt"
+      Push-Artifact "BenchmarkDotNet.Artifacts\BenchmarkRun-*.log"    
+
+# override settings for `master` branch
+for:
+-
+  branches:
+    only:
+      - master
+
+  before_deploy:
+    - ps: Git-Config 
+  
+  deploy_script: 
+    # update documentation & publish nuget package
+    - ps: |
+        GH-Pages
+        Deploy

@@ -1,0 +1,15 @@
+{
+  "bin": "..\\BIN",
+  "solution": "..\\MySolution.sln",
+  "app": "..\\SRC\\MyProject.csproj",
+  "githubrepo": "myproject.git",
+  "vendor": "..\\Vendor",
+  "tests": "..\\TEST\\MyProject.Tests.csproj",
+  "testtarget": "netcoreapp2.2",
+  "artifacts": "..\\Artifacts",
+  "coveragefilter": "+[MyProject*]* -[MyProject.Tests]*",
+  "perftests": "..\\PERF\\MyProject.Perf.csproj",
+  "perftarget": "netcoreapp3.0",
+  "docsbranch": "gh-pages",
+  "CI": "AppVeyor"
+}
