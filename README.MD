@@ -18,7 +18,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
 
 ## Setup your project
 - Create the `appveyor.yml` file in your project root from the [sample](https://github.com/Sholtee/build/blob/master/samples/appveyor.yml ). You should modify only the values of the environment variables (marked with `xXx` in the sample).
-- Create the `project.json` file in your "scripts" folder from the [sample](https://github.com/Sholtee/build/blob/master/samples/project.json ). Your project should consist of an `app` project, a `tests` project and a `perftests` project.
+- Create the `project.json` file in your project root from the [sample](https://github.com/Sholtee/build/blob/master/samples/project.json ). Your project should consist of an `app` project, a `tests` project and a `perftests` project.
 - Add/merge the followings to the `csproj` of your project (under the `Project` node):
   ```xml
   <PropertyGroup>
@@ -74,9 +74,8 @@ In the followings you MUST use the **SECURED** values of the tokens above
   </ItemGroup>
   ```
 - Copy the [docfx.json](https://github.com/Sholtee/build/blob/master/samples/PERF/docfx.json ) and [index.md](https://github.com/Sholtee/build/blob/master/samples/PERF/index.md ) to the source folder of your benchmark project (`PERF` by default). In `index.md` modify the URLs.  
-- Your project containing the unit tests (`YourProject.Test`) should target `netcoreapp2.2`
-- [GitIgnore](https://git-scm.com/docs/gitignore ) everything in your "scripts" folder except the project.json in the root (the submodule is responsible for keeping script files up to date).
-- GitIgnore the `Artifacts` folder in your project root.
+- Your project containing the unit tests (`YourProject.Test`) should target `netcoreapp2.2`.
+- [GitIgnore](https://git-scm.com/docs/gitignore ) the `Artifacts` folder in your project root.
 - GitIgnore `manifest.json` on your `gh-pages` branch.
 - Create an `index.html` on your `gh-pages` branch:
   ```html
