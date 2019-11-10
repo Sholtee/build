@@ -5,10 +5,6 @@
 #
 $ErrorActionPreference = "Stop"
 
-Set-Variable PROJECT -option Constant -value (Get-Content ".\project.json" -raw | ConvertFrom-Json)
-
-$Env:CI = $PROJECT.CI
-
 function Create-Directory([Parameter(Position = 0)][string[]] $path) {
   if (!(Test-Path $path)) {
     New-Item -path $path -force -itemType "Directory" | Out-Null
@@ -60,11 +56,11 @@ function Directory-Name([Parameter(Position = 0)][string] $path) {
 }
 
 function Directory-Of([Parameter(Position = 0)][string] $filename) {
-  $path = Path-Combine Get-Location $filename
+  $path=Path-Combine (Get-Location), $filename
   
   try {
     if (Test-Path $path) {
-      return Directory-Name $path
+      return Directory-Path $path | Resolve-Path
     }
 	
     return Directory-Of "$(Path-Combine '..', $filename)"
@@ -147,3 +143,22 @@ function Get-SysInfo() {
 function Get-CoreVer() {
   return (dir (Get-Command dotnet).Path.Replace("dotnet.exe", "shared\Microsoft.NETCore.App")).Name.Split($("" | Out-String)) | where { $_ -Match "^\d+.\d+.\d+$" }
 }
+
+function Read-Project() {
+  $root=Directory-Of "project.json"
+  $hash=@{}
+  
+  (Get-Content (Path-Combine $root, "project.json") -raw | ConvertFrom-Json).PSObject.Properties | ForEach-Object -process {    
+    if ($_.Value.StartsWith("\")) {
+      $hash[$_.Name]=Join-Path $root $_.Value
+    } else {
+	  $hash[$_.Name]=$_.Value
+	}
+  }
+  
+  return New-Object -TypeName PSObject -Property $hash
+}
+
+Set-Variable PROJECT -option Constant -value (Read-Project)
+
+$Env:CI = $PROJECT.CI
