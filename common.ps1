@@ -145,18 +145,20 @@ function Get-CoreVer() {
 }
 
 function Read-Project() {
-  $root=Directory-Of "project.json"
+  $json="project.json"
+  $root=Directory-Of $json
   $hash=@{}
-  
-  (Get-Content (Path-Combine $root, "project.json") -raw | ConvertFrom-Json).PSObject.Properties | ForEach-Object -process {    
-    if ($_.Value.StartsWith("\")) {
+
+  (Get-Content (Path-Combine $root, $json) -raw | ConvertFrom-Json).PSObject.Properties | ForEach-Object {    
+    if ($_.Value.StartsWith([System.IO.Path]::DirectorySeparatorChar)) {
+	  # Don't use Path-Combine here! It can't handle if a path-part starts with directory separator.
       $hash[$_.Name]=Join-Path $root $_.Value
     } else {
-	  $hash[$_.Name]=$_.Value
-	}
+      $hash[$_.Name]=$_.Value
+    }
   }
-  
-  return New-Object -TypeName PSObject -Property $hash
+
+  return New-Object -typename PSObject -property $hash
 }
 
 Set-Variable PROJECT -option Constant -value (Read-Project)
