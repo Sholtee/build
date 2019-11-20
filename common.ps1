@@ -23,11 +23,7 @@ function Path-Combine([Parameter(Position = 0)][string[]] $path) {
 
 function Path-Add-Slash([Parameter(Position = 0)][string] $path) {
   $sep=[System.IO.Path]::DirectorySeparatorChar
-  
-  if ($path -notmatch "\$($sep)$") {
-    $path += $sep
-  }
-  
+  if ($path -NotMatch "\$($sep)$") { $path += $sep } 
   return $path
 }
 
@@ -73,63 +69,76 @@ function FileName-Without-Extension([Parameter(Position = 0)][string] $filename)
 }
 
 function Write-Log([Parameter(ValueFromPipeline)][string] $text, [Parameter(Position = 0)][string] $filename) {
-  Create-Directory $PROJECT.artifacts
-  $text | Out-File (Path-Combine $PROJECT.artifacts, $filename) -force -append
+  if (![System.String]::IsNullOrEmpty($text)) {
+    Create-Directory $PROJECT.artifacts
+    $text | Out-File (Path-Combine $PROJECT.artifacts, $filename) -Force -Append
+  }
 }
 
-function Exec([Parameter(Position = 0)][string]$command, [string]$commandArgs = $null, [switch] $redirectOutput, [switch] $noLog, [switch] $ignoreError) {
+function Attach-ToProcess([Parameter(Position = 0)][System.Diagnostics.Process]$process, [Parameter(Position = 1)][string]$eventName) {
+  $sb = New-Object System.Text.StringBuilder
+  return New-Object -TypeName PSObject -Property @{
+    Output = $sb
+    Job = Register-ObjectEvent -InputObject $process -EventName $eventName -MessageData $sb -Action { $Event.MessageData.AppendLine($EventArgs.Data) | Out-Null }
+  }
+}
+
+function Exec([Parameter(Position = 0)][string]$command, [string]$commandArgs = $null, [switch]$redirectOutput, [switch]$noLog, [switch]$ignoreError) {
   $startInfo = New-Object System.Diagnostics.ProcessStartInfo
   $startInfo.FileName = $command
   $startInfo.Arguments = $commandArgs
   $startInfo.UseShellExecute = $false
-  $startInfo.RedirectStandardOutput = ($redirectOutput -or !$noLog)
+  $startInfo.RedirectStandardOutput = ($redirectOutput -Or !$noLog)
   $startInfo.RedirectStandardError = !$noLog 
   $startInfo.WorkingDirectory = Get-Location
 
   $process = New-Object System.Diagnostics.Process
   $process.StartInfo = $startInfo
+
+  $stdOut = Attach-ToProcess $process -eventName OutputDataReceived
+  $stdErr = Attach-ToProcess $process -eventName ErrorDataReceived
+
   $process.Start() | Out-Null
 
+  if ($startInfo.RedirectStandardOutput) { $process.BeginOutputReadLine() } 
+  if ($startInfo.RedirectStandardError) { $process.BeginErrorReadLine() }
+
   $finished = $false
-  
+
   try {
     while (!$process.WaitForExit(100)) {
-      # Non-blocking loop done to allow ctr-c interrupts
+      # Non-blocking loop is done to allow ctr-c interrupts
     }
-	
+
     $finished = $true
   } finally {
-    if (!$finished) {
-      $process.Kill()
-    }
+    if (!$finished) { $process.Kill() }
   }
-  
+
+  # Flush outputs
+  $stdOut.Job.StopJob()
+  $stdErr.Job.StopJob()
+
+  function Pretty-Write([Parameter(Position = 0)][string]$str, [string]$filename) {
+    if (![System.String]::IsNullOrEmpty($str)) {
+      $break=[System.Environment]::NewLine
+      "$($command):$($break)$($str)$($break)" | Write-Log -filename $filename
+    }
+  }  
+
+  if (!$noLog) {
+    Pretty-Write $stdOut.Output.ToString() -filename "log.txt"
+    Pretty-Write $stdErr.Output.ToString() -filename "errors.txt"
+  }
+
   $exitCode = $process.ExitCode
 
   if ($exitCode -Ne 0) {
-    if (!$noLog) {
-      $process.StandardOutput.ReadToEnd() | Write-Log -filename "log.txt"
-      $process.StandardError.ReadToEnd()  | Write-Log -filename "errors.txt"
-    }
-	
-    if (!$ignoreError) {	
-      Exit $exitCode
-    }
-
+    if (!$ignoreError) { Exit $exitCode }
     return
   }
 
-  if ($redirectOutput -or !$noLog) {
-    $output = $process.StandardOutput.ReadToEnd()
-
-    if (!$noLog) {
-      $output | Write-Log -filename "log.txt"
-    }
-
-    if ($redirectOutput) {
-      return $output
-    }
-  }
+  if ($redirectOutput) { return $stdOut.ToString() }
 }
 
 function Get-SysInfo() {
@@ -141,7 +150,7 @@ function Get-SysInfo() {
 }
 
 function Get-CoreVer() {
-  return (dir (Get-Command dotnet).Path.Replace("dotnet.exe", "shared\Microsoft.NETCore.App")).Name.Split($("" | Out-String)) | where { $_ -Match "^\d+.\d+.\d+$" }
+  return (dir (Get-Command dotnet).Path.Replace("dotnet.exe", "shared\Microsoft.NETCore.App")).Name.Split([System.Environment]::NewLine) | where { $_ -Match "^\d+.\d+.\d+$" }
 }
 
 function Read-Project() {
@@ -151,7 +160,7 @@ function Read-Project() {
 
   (Get-Content (Path-Combine $root, $json) -raw | ConvertFrom-Json).PSObject.Properties | ForEach-Object {    
     if ($_.Value.StartsWith([System.IO.Path]::DirectorySeparatorChar)) {
-	  # Don't use Path-Combine here! It can't handle if a path-part starts with directory separator.
+      # Don't use Path-Combine here! It can't handle if a path-part starts with directory separator.
       $hash[$_.Name]=Join-Path $root $_.Value
     } else {
       $hash[$_.Name]=$_.Value

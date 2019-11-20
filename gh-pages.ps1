@@ -37,8 +37,8 @@ function GH-Pages() {
       $oldLocation=Get-Location
       Set-Location -path $repodir
       try {
-        Exec "git.exe" -commandArgs "add `"$($path)`"" -ignoreError -noLog    
-        Exec "git.exe" -commandArgs "commit -m `"$($message)`"" -ignoreError -noLog
+        Exec "git.exe" -commandArgs "add `"$($path)`"" -ignoreError
+        Exec "git.exe" -commandArgs "commit -m `"$($message)`"" -ignoreError
         Exec "git.exe" -commandArgs "push origin $($PROJECT.docsbranch)"
       } finally {
         Set-Location -path $oldLocation	  
