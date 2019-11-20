@@ -64,12 +64,14 @@ function Directory-Of([Parameter(Position = 0)][string] $filename) {
   }    
 }
 
-function FileName-Without-Extension([Parameter(Position = 0)][string] $filename) {
+function FileName-Without-Extension([Parameter(Position = 0)][string]$filename) {
   return [System.IO.Path]::GetFileNameWithoutExtension($filename)
 }
 
-function Write-Log([Parameter(ValueFromPipeline)][string] $text, [Parameter(Position = 0)][string] $filename) {
-  if (![System.String]::IsNullOrEmpty($text)) {
+function Is-NullOrEmpty([Parameter(Position = 0)][string]$string) { return [System.String]::IsNullOrEmpty($string) }
+
+function Write-Log([Parameter(ValueFromPipeline)][string]$text, [Parameter(Position = 0)][string]$filename) {
+  if (!(Is-NullOrEmpty $text)) {
     Create-Directory $PROJECT.artifacts
     $text | Out-File (Path-Combine $PROJECT.artifacts, $filename) -Force -Append
   }
@@ -79,7 +81,11 @@ function Attach-ToProcess([Parameter(Position = 0)][System.Diagnostics.Process]$
   $sb = New-Object System.Text.StringBuilder
   return New-Object -TypeName PSObject -Property @{
     Output = $sb
-    Job = Register-ObjectEvent -InputObject $process -EventName $eventName -MessageData $sb -Action { $Event.MessageData.AppendLine($EventArgs.Data) | Out-Null }
+    Job = Register-ObjectEvent -InputObject $process -EventName $eventName -MessageData $sb -Action { 
+      if (!(Is-NullOrEmpty $EventArgs.Data)) { 
+        $Event.MessageData.AppendLine($EventArgs.Data) | Out-Null 
+      } 
+    }
   }
 }
 
@@ -95,8 +101,8 @@ function Exec([Parameter(Position = 0)][string]$command, [string]$commandArgs = 
   $process = New-Object System.Diagnostics.Process
   $process.StartInfo = $startInfo
 
-  $stdOut = Attach-ToProcess $process -eventName OutputDataReceived
-  $stdErr = Attach-ToProcess $process -eventName ErrorDataReceived
+  $stdOut = Attach-ToProcess $process -EventName OutputDataReceived
+  $stdErr = Attach-ToProcess $process -EventName ErrorDataReceived
 
   $process.Start() | Out-Null
 
@@ -119,16 +125,10 @@ function Exec([Parameter(Position = 0)][string]$command, [string]$commandArgs = 
   $stdOut.Job.StopJob()
   $stdErr.Job.StopJob()
 
-  function Pretty-Write([Parameter(Position = 0)][string]$str, [string]$filename) {
-    if (![System.String]::IsNullOrEmpty($str)) {
-      $break=[System.Environment]::NewLine
-      "$($command):$($break)$($str)$($break)" | Write-Log -filename $filename
-    }
-  }  
-
   if (!$noLog) {
-    Pretty-Write $stdOut.Output.ToString() -filename "log.txt"
-    Pretty-Write $stdErr.Output.ToString() -filename "errors.txt"
+    $fmt = "{0}:{1}{{0}}{1}" -F $command, [System.Environment]::NewLine
+    ($fmt -F $stdOut.Output.ToString()) | Write-Log -Filename "log.txt"
+    ($fmt -F $stdErr.Output.ToString()) | Write-Log -Filename "errors.txt"
   }
 
   $exitCode = $process.ExitCode
@@ -150,7 +150,7 @@ function Get-SysInfo() {
 }
 
 function Get-CoreVer() {
-  return (dir (Get-Command dotnet).Path.Replace("dotnet.exe", "shared\Microsoft.NETCore.App")).Name.Split([System.Environment]::NewLine) | where { $_ -Match "^\d+.\d+.\d+$" }
+  return (dir (Get-Command dotnet).Path.Replace("dotnet.exe", "shared\Microsoft.NETCore.App")).Name.Split([System.Environment]::NewLine) | Where { $_ -Match "^\d+.\d+.\d+$" }
 }
 
 function Read-Project() {
