@@ -16,7 +16,7 @@ function GH-Pages() {
     Exec "git.exe" -commandArgs "clone https://github.com/$($PROJECT.githubrepo) --branch `"$($PROJECT.docsbranch)`" `"$repodir`""
     $repodir=Resolve-Path $repodir
 
-    function BuildNMove([string] $projectDir, [string] $docsOutput) {
+    function BuildNMove([string]$projectDir, [string]$docsOutput) {
       DocFx "$(Path-Combine $projectDir, 'docfx.json')"
       Write-Host "Moving docs..."
       Move-Directory $docsOutput $repodir -clearDst	
@@ -32,7 +32,7 @@ function GH-Pages() {
       BuildNMove -projectDir (Directory-Path $PROJECT.perftests) -docsOutput (Path-Combine $PROJECT.artifacts, "BenchmarkDotNet.Artifacts", $PERF_FOLDER)
     }
 
-    function Commit([Parameter(Position = 0)][string]$path, [string] $message) {
+    function Commit([Parameter(Position = 0)][string]$path, [string]$message) {
       Write-Host Committing changes...
       $oldLocation=Get-Location
       Set-Location -path $repodir
