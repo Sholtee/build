@@ -17,8 +17,8 @@ To work properly you need to create some access tokens and [secure](https://ci.a
 In the followings you MUST use the **SECURED** values of the tokens above
 
 ## Setup your project
-- Create the `appveyor.yml` file in your project root from the [sample](https://github.com/Sholtee/build/blob/master/templates/appveyor.yml ). You should modify only the values of the environment variables (marked with `xXx` in the sample).
-- Create the `project.json` file in your project root from the [sample](https://github.com/Sholtee/build/blob/master/templates/project.json ). Your project should consist of an `app` project, a `tests` project and a `perftests` project.
+- Create the `appveyor.yml` file in your project root from the [template](https://github.com/Sholtee/build/blob/master/templates/appveyor.yml ). You should modify only the values of the environment variables (marked with `xXx` in the sample).
+- Create the `project.json` file in your project root from the [template](https://github.com/Sholtee/build/blob/master/templates/project.json ). Your project should consist of an `app` project, a `tests` project and a `perftests` project.
 - Add/merge the followings to the `csproj` of your project (under the `Project` node):
   ```xml
   <PropertyGroup>
