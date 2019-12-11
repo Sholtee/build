@@ -26,16 +26,9 @@ In the followings you MUST use the **SECURED** values of the tokens above
     <Company>Your Company</Company>
     <Authors>Your Name</Authors>
     <Version>1.0.0-preview1</Version>
-    <AssemblyName>YourAssembly</AssemblyName>
+    <AssemblyName>YourProject</AssemblyName>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="nunit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
-    <PackageReference Include="NunitXml.TestLogger" Version="2.1.41" />
-  </ItemGroup>
-  
+
   <ItemGroup>
     <None Remove="docfx.json" />
     <None Remove="index.md" />
@@ -54,6 +47,30 @@ In the followings you MUST use the **SECURED** values of the tokens above
     <RepositoryUrl>https://github.com/YourName/YourProject</RepositoryUrl>
     <RepositoryBranch>$(CurrentBranch)</RepositoryBranch>
   </PropertyGroup>  
+  ```
+- Add/merge the followings to the `csproj` of your test project (under the `Project` node):
+  ```xml
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <AssemblyName>YourProject.Tests</AssemblyName>
+    <RootNamespace>YourProject.Tests</RootNamespace>
+    <Configurations>Debug</Configurations>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  
+  <!--VC 16.4+: OpenCover requires .NET Core 2.2 while Test Explorer needs 3.X-->
+  <PropertyGroup Condition="'$(CI)'==''">
+    <TargetFramework>netcoreapp3.0</TargetFramework>  
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+    <PackageReference Include="NunitXml.TestLogger" Version="2.1.41" />
+  </ItemGroup> 
   ```
 - Copy the [docfx.json](https://github.com/Sholtee/build/blob/master/templates/API/docfx.json ) and [index.md](https://raw.githubusercontent.com/Sholtee/build/master/templates/API/index.md ) to the source folder of your project (`SRC` by default). In `docfx.json` modify `csproj` name and title, in `index.md` modify the URLs.
 - Add/merge the followings to the `csproj` of your benchmark project (under the `Project` node):
