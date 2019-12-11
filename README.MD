@@ -90,8 +90,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
     <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
   </ItemGroup>
   ```
-- Copy the [docfx.json](https://github.com/Sholtee/build/blob/master/templates/PERF/docfx.json ) and [index.md](https://raw.githubusercontent.com/Sholtee/build/master/templates/PERF/index.md ) to the source folder of your benchmark project (`PERF` by default). In `index.md` modify the URLs.  
-- Your project containing the unit tests (`YourProject.Test`) should target `netcoreapp2.2`.
+- Copy the [docfx.json](https://github.com/Sholtee/build/blob/master/templates/PERF/docfx.json ) and [index.md](https://raw.githubusercontent.com/Sholtee/build/master/templates/PERF/index.md ) to the source folder of your benchmark project (`PERF` by default). In `index.md` modify the URLs.
 - [GitIgnore](https://git-scm.com/docs/gitignore ) the `Artifacts` folder in your project root.
 - GitIgnore `manifest.json` on your `gh-pages` branch.
 - Create an `index.html` on your `gh-pages` branch:
