@@ -60,7 +60,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
     <OutputType>Library</OutputType>
   </PropertyGroup>
   
-  <!--VC 16.4+: OpenCover requires .NET Core 2.2 while Test Explorer needs 3.X-->
+  <!--VS 16.4+: OpenCover requires .NET Core 2.2 while Test Explorer needs 3.X-->
   <PropertyGroup Condition="'$(CI)'==''">
     <TargetFramework>netcoreapp3.0</TargetFramework>  
   </PropertyGroup>
