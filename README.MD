@@ -72,7 +72,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
   ```xml
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>YourProject.Perf</AssemblyName>
   </PropertyGroup>
   
