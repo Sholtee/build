@@ -52,18 +52,13 @@ In the followings you MUST use the **SECURED** values of the tokens above
 - Add/merge the followings to the `csproj` of your test project (under the `Project` node):
   ```xml
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <AssemblyName>YourProject.Tests</AssemblyName>
     <RootNamespace>YourProject.Tests</RootNamespace>
     <Configurations>Debug</Configurations>
     <OutputType>Library</OutputType>
-  </PropertyGroup>
-  
-  <!--VS 16.4+: Coveralls.NET requires .NET Core 2.2 while Test Explorer needs 3.X-->
-  <PropertyGroup Condition="'$(CI)'==''">
-    <TargetFramework>netcoreapp3.0</TargetFramework>  
   </PropertyGroup>
 
   <ItemGroup>

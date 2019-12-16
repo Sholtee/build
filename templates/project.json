@@ -5,11 +5,11 @@
   "githubrepo": "MyName/MyProject.git",
   "vendor": "\\Vendor",
   "tests": "\\TEST\\MyProject.Tests.csproj",
-  "testtarget": "netcoreapp2.2",
+  "testtarget": "netcoreapp3.1",
   "artifacts": "\\Artifacts",
   "coveragefilter": "+[MyProject*]* -[MyProject.Tests]*",
   "perftests": "\\PERF\\MyProject.Perf.csproj",
-  "perftarget": "netcoreapp3.0",
+  "perftarget": "netcoreapp3.1",
   "docsbranch": "gh-pages",
   "CI": "AppVeyor"
 }
