@@ -18,7 +18,10 @@ function Push-Test-Results() {
   if (Test-Path $coveragereport) {
     Write-Host Uploading coverage report...
 
-    $coveralls=Path-Combine (Get-Package "coveralls.net" -Version "1.0.0"), "tools", "csmacnz.coveralls.exe" | Resolve-Path
+    # Get-Package not working here
+    Exec "dotnet.exe" -commandArgs "tool install coveralls.net --version 1.0.0 --tool-path `"$($PROJECT.vendor)`""
+
+    $coveralls=Path-Combine $PROJECT.vendor, "csmacnz.Coveralls.exe" | Resolve-Path
     Exec $coveralls -commandArgs "--opencover -i `"$($coveragereport)`" --repoToken $Env:COVERALLS_REPO_TOKEN --commitId $Env:APPVEYOR_REPO_COMMIT --commitBranch $Env:APPVEYOR_REPO_BRANCH --commitAuthor $Env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $Env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $Env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $Env:APPVEYOR_BUILD_NUMBER --serviceName appveyor"
   }
 }
