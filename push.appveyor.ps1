@@ -4,7 +4,7 @@
 # Author: Denes Solti
 #
 function Push-Test-Results() {
-  $testresults=Path-Combine $PROJECT.artifacts, "testresults.xml"
+  $testresults=Path-Combine $PROJECT.artifacts, $PROJECT.testresults
 
   if (Test-Path $testresults) {
     Write-Host Uploading test results...
@@ -13,7 +13,7 @@ function Push-Test-Results() {
     $client.UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($Env:APPVEYOR_JOB_ID)", $testresults)
   }
 
-  $coveragereport=Path-Combine $PROJECT.artifacts, "coverage.xml"
+  $coveragereport=Path-Combine $PROJECT.artifacts, $PROJECT.coveragereport
 
   if (Test-Path $coveragereport) {
     Write-Host Uploading coverage report...

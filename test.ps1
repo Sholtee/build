@@ -11,8 +11,8 @@ function Regular-Tests() {
 
   $args="
     -target:`"$(Path-Combine $Env:ProgramFiles, 'dotnet\dotnet.exe')`"
-    -targetargs:`"test $(Resolve-Path $PROJECT.tests) --framework $($PROJECT.testtarget) --configuration:Debug --test-adapter-path:. --logger:nunit;LogFilePath=$(Path-Combine (Resolve-Path $PROJECT.artifacts), 'testresults.xml')`"
-    -output:`"$(Path-Combine (Resolve-Path $PROJECT.artifacts), 'coverage.xml')`"
+    -targetargs:`"test $($PROJECT.tests) --framework $($PROJECT.testtarget) --configuration:Debug --test-adapter-path:. --logger:nunit;LogFilePath=$(Path-Combine $PROJECT.artifacts, $PROJECT.testresults)`"
+    -output:`"$(Path-Combine $PROJECT.artifacts, $PROJECT.coveragereport)`"
     -oldStyle 
     -register:user 
     -excludebyattribute:*.ExcludeFromCoverage* 
