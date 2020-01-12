@@ -105,7 +105,7 @@ Will be placed on your `gh-pages` branch under the `doc` and `perf` folder
 - [NuGet](https://buildstats.info/ )
 - Coveralls
 ## Using
-- Regular test are done on every branch on every commit
+- Regular tests are done on every branch on every commit
 - Performance tests are done on `perf` tag but results are publishd only if the tag was placed on a `master` branch commit
 - API docs are updated and publishd on every `master` branch commit
 - NuGet package is deployed on version tags (e.g. `v1.0.0-preview1`) placed on a `master` branch commit
