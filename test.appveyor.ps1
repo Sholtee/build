@@ -4,8 +4,16 @@
 # Author: Denes Solti
 #
 function Test() {
-  if ($Env:APPVEYOR_REPO_TAG_NAME -eq "perf") {
-    Write-Host Running performance tests...
+  $match = [System.Text.RegularExpressions.Regex]::Match($Env:APPVEYOR_REPO_TAG_NAME, "^perf(?:-v(?<version>\d+.\d+.\d+[-\w]*))?$")
+  if ($match.Success) {
+    $ver = $match.Groups["version"]
+    if ($ver.Success) {
+      $Env:LibVersion = $ver.Value
+    }
+	
+    if($Env:LibVersion -is [String]) {$target = $Env:LibVersion} else {$target = "source"}
+	
+    Write-Host "Running performance tests against $($target)..."	
     Performance-Tests
   } else {
     Write-Host Running regular tests...
