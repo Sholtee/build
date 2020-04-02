@@ -83,6 +83,11 @@ In the followings you MUST use the **SECURED** values of the tokens above
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
+    <PackageReference Condition="'$(LibVersion)' != ''" Include="YourProjectId" Version="$(LibVersion)"></PackageReference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Condition="'$(LibVersion)' == ''" Include="..\SRC\YourProject.csproj" />
   </ItemGroup>
   ```
 - Copy the [docfx.json](https://github.com/Sholtee/build/blob/master/templates/PERF/docfx.json ) and [index.md](https://raw.githubusercontent.com/Sholtee/build/master/templates/PERF/index.md ) to the source folder of your benchmark project (`PERF` by default). In `index.md` modify the URLs.
