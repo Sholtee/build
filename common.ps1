@@ -166,6 +166,9 @@ function Read-Project() {
       $hash[$_.Name]=$_.Value
     }
   }
+  
+  [XML]$csproj= Get-Content $hash.app
+  $hash.version=$csproj.Project.PropertyGroup.Version
 
   return New-Object -TypeName PSObject -Property $hash
 }
