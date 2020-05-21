@@ -14,7 +14,8 @@ function Performance-Tests() {
 
   Exec "dotnet.exe" -commandArgs "build $(Resolve-Path $PROJECT.perftests) --framework $($PROJECT.perftarget) --configuration Perf --output `"$(Resolve-Path $PROJECT.bin)`""
 
-  $perfexe="$(FileName-Without-Extension $PROJECT.perftests).exe"
+  [XML]$csproj=Resolve-Path $PROJECT.perftests | Get-Content
+  $perfexe="$(($csproj.Project.PropertyGroup.AssemblyName | Out-String).Trim()).exe"
 
   Exec "$(Path-Combine $PROJECT.bin, $perfexe | Resolve-Path)" -commandArgs "-f * -e GitHub -a `"$(Resolve-Path $artifacts)`"" -noLog
 }

@@ -21,20 +21,20 @@ function Path-Combine([Parameter(Position = 0)][string[]] $path) {
   return [System.IO.Path]::Combine($path)
 }
 
-function Path-Add-Slash([Parameter(Position = 0)][string] $path) {
+function Path-AddSlash([Parameter(Position = 0)][string] $path) {
   $sep=[System.IO.Path]::DirectorySeparatorChar
   if ($path -NotMatch "\$($sep)$") { $path += $sep } 
   return $path
 }
 
 function Move-Directory([Parameter(Position = 0)][string] $src, [Parameter(Position = 1)][string] $dst, [switch] $clearDst) {
-  $src=Path-Add-Slash $src
+  $src=Path-AddSlash $src
 
   if (!(Test-Path $src)) {
     throw "`"$($src)`" could not be found"
   }
   
-  $dst=Path-Add-Slash $dst
+  $dst=Path-AddSlash $dst
   
   if ($clearDst) {
     Remove-Directory (Path-Combine $dst, (Directory-Name $src))
@@ -62,10 +62,6 @@ function Directory-Of([Parameter(Position = 0)][string] $filename) {
     return Directory-Of "$(Path-Combine '..', $filename)"
   } catch {
   }    
-}
-
-function FileName-Without-Extension([Parameter(Position = 0)][string]$filename) {
-  return [System.IO.Path]::GetFileNameWithoutExtension($filename)
 }
 
 function Is-NullOrEmpty([Parameter(Position = 0)][string]$string) { return [System.String]::IsNullOrEmpty($string) }
