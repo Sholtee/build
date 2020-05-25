@@ -163,9 +163,12 @@ function Read-Project() {
     }
   }
   
-  [XML]$csproj= Get-Content $hash.app
-  $hash.version=($csproj.Project.PropertyGroup.Version | Out-String).Trim()
-  $hash.repo=($csproj.Project.PropertyGroup.RepositoryUrl | Out-String).Trim()
+  if ($hash.ContainsKey("commonprops")) { $propsPath=$hash.commonprops }
+  else { $propsPath=$hash.app }
+
+  [XML]$props=Get-Content $propsPath
+  $hash.version=($props.Project.PropertyGroup.Version | Out-String).Trim()
+  $hash.repo=($props.Project.PropertyGroup.RepositoryUrl | Out-String).Trim()
 
   return New-Object -TypeName PSObject -Property $hash
 }
