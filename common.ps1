@@ -165,6 +165,7 @@ function Read-Project() {
   
   [XML]$csproj= Get-Content $hash.app
   $hash.version=($csproj.Project.PropertyGroup.Version | Out-String).Trim()
+  $hash.repo=($csproj.Project.PropertyGroup.RepositoryUrl | Out-String).Trim()
 
   return New-Object -TypeName PSObject -Property $hash
 }

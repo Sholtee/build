@@ -2,7 +2,6 @@
   "bin": "\\BIN",
   "solution": "\\MySolution.sln",
   "app": "\\SRC\\MyProject.csproj",
-  "githubrepo": "MyName/MyProject.git",
   "vendor": "\\Vendor",
   "tests": "\\TEST\\MyProject.Tests.csproj",
   "testtarget": "netcoreapp2.2",

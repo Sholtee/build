@@ -13,7 +13,7 @@ function GH-Pages() {
   Remove-Directory $repodir
 
   try {
-    Exec "git.exe" -commandArgs "clone https://github.com/$($PROJECT.githubrepo) --branch `"$($PROJECT.docsbranch)`" `"$repodir`""
+    Exec "git.exe" -commandArgs "clone $($PROJECT.repo) --branch `"$($PROJECT.docsbranch)`" `"$repodir`""
     $repodir=Resolve-Path $repodir
 
     function BuildNMove([string]$projectDir, [string]$docsOutput) {
