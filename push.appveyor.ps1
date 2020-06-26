@@ -4,26 +4,18 @@
 # Author: Denes Solti
 #
 function Push-Test-Results() {
-  $testresults=Path-Combine $PROJECT.artifacts, $PROJECT.testresults
-
-  if (Test-Path $testresults) {
-    $client= New-Object System.Net.WebClient
+  $client= New-Object System.Net.WebClient
 	
-    Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*.xml") -Exclude "coverage_*" | foreach {
-      Write-Host "Uploading test result: $($_.Name)"
-      $client.UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($Env:APPVEYOR_JOB_ID)", $_.ToString())
-    }
+  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*.xml") -Exclude "coverage_*" | foreach {
+    Write-Host "Uploading test result: $($_.Name)"
+    $client.UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($Env:APPVEYOR_JOB_ID)", $_.ToString())
   }
 
-  $coveragereport=Path-Combine $PROJECT.artifacts, $PROJECT.coveragereport
+  $coveralls=Path-Combine (Get-Package "coveralls.io" -Version "1.4.2"), "tools", "coveralls.net.exe" | Resolve-Path
 
-  if (Test-Path $coveragereport) {
-    $coveralls=Path-Combine (Get-Package "coveralls.io" -Version "1.4.2"), "tools", "coveralls.net.exe" | Resolve-Path
-    
-	Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "coverage_*.xml") | foreach {
-	  Write-Host "Uploading coverage report: $($_.Name)"
-      Exec $coveralls -commandArgs "--opencover `"$($_.ToString())`" -r $Env:COVERALLS_REPO_TOKEN"
-    }
+  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "coverage_*.xml") | foreach {
+    Write-Host "Uploading coverage report: $($_.Name)"
+    Exec $coveralls -commandArgs "--opencover `"$($_.ToString())`" -r $Env:COVERALLS_REPO_TOKEN"
   }
 }
 
