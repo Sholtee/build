@@ -9,15 +9,20 @@ function Regular-Tests() {
 
   $opencover=Path-Combine (Get-Package "OpenCover" -Version "4.7.922"), "tools", "OpenCover.Console.exe" | Resolve-Path
 
-  $args="
-    -target:`"$(Path-Combine $Env:ProgramFiles, 'dotnet', 'dotnet.exe')`"
-    -targetargs:`"test $($PROJECT.tests) --framework $($PROJECT.testtarget) --configuration:Debug --test-adapter-path:. --logger:nunit;LogFilePath=$(Path-Combine $PROJECT.artifacts, $PROJECT.testresults)`"
-    -output:`"$(Path-Combine $PROJECT.artifacts, $PROJECT.coveragereport)`"
-    -oldStyle 
-    -register:user 
-    -excludebyattribute:*.ExcludeFromCoverage* 
-    -filter:`"$($PROJECT.coveragefilter)`"
-  "
+  Get-ChildItem -Path (Path-Combine "..", $PROJECT.tests) | foreach {
+    $resultsxml=Path-ChangeExtension -path $_.Name -extension 'xml'
+	$coveragexml="coverage_$($resultsxml)"
+  
+    $args="
+      -target:`"$(Path-Combine $Env:ProgramFiles, 'dotnet', 'dotnet.exe')`"
+      -targetargs:`"test $($_) --framework $($PROJECT.testtarget) --configuration:Debug --test-adapter-path:. --logger:nunit;LogFilePath=$(Path-Combine $PROJECT.artifacts, $resultsxml)`"
+      -output:`"$(Path-Combine $PROJECT.artifacts, $coveragexml)`"
+      -oldStyle 
+      -register:user 
+      -excludebyattribute:*.ExcludeFromCoverage* 
+      -filter:`"$($PROJECT.coveragefilter)`"
+    "
 
-  Exec $opencover -commandArgs $args
+    Exec $opencover -commandArgs $args
+  }
 }
