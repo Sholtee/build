@@ -11,12 +11,12 @@ function Regular-Tests() {
 
   Get-ChildItem -Path (Path-Combine $PROJECT.root, $PROJECT.tests) | foreach {
     $resultsxml=Path-ChangeExtension $_.Name -Extension 'xml'
-	$coveragexml="coverage_$($resultsxml)"
-  
+
     $args="
       -target:`"$(Path-Combine $Env:ProgramFiles, 'dotnet', 'dotnet.exe')`"
       -targetargs:`"test $($_) --framework $($PROJECT.testtarget) --configuration:Debug --test-adapter-path:. --logger:nunit;LogFilePath=$(Path-Combine $PROJECT.artifacts, $resultsxml)`"
-      -output:`"$(Path-Combine $PROJECT.artifacts, $coveragexml)`"
+      -output:`"$(Path-Combine $PROJECT.artifacts, 'coverage.xml')`"
+	  -mergeoutput
       -oldStyle 
       -register:user 
       -excludebyattribute:*.ExcludeFromCoverage* 

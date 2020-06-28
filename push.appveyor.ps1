@@ -11,11 +11,13 @@ function Push-Test-Results() {
     $client.UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($Env:APPVEYOR_JOB_ID)", $_.ToString())
   }
 
-  $coveralls=Path-Combine (Get-Package "coveralls.io" -Version "1.4.2"), "tools", "coveralls.net.exe" | Resolve-Path
+  $coveragereport=Path-Combine $PROJECT.artifacts, "coverage.xml"
+ 
+  if (Test-Path $coveragereport) {
+    Write-Host Uploading coverage report...
 
-  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "coverage_*.xml") | foreach {
-    Write-Host "Uploading coverage report: $($_.Name)"
-    Exec $coveralls -commandArgs "--opencover `"$($_.ToString())`" -r $Env:COVERALLS_REPO_TOKEN"
+    $coveralls=Path-Combine (Get-Package "coveralls.io" -Version "1.4.2"), "tools", "coveralls.net.exe" | Resolve-Path
+    Exec $coveralls -commandArgs "--opencover `"$($coveragereport)`" -r $Env:COVERALLS_REPO_TOKEN"
   }
 }
 
