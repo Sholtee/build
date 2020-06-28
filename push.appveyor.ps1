@@ -5,13 +5,14 @@
 #
 function Push-Test-Results() {
   $client= New-Object System.Net.WebClient
+  $coveragexml="coverage.xml"
 	
-  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*.xml") -Exclude "coverage_*" | foreach {
+  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*.xml") -Exclude $coveragexml | foreach {
     Write-Host "Uploading test result: $($_.Name)"
     $client.UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($Env:APPVEYOR_JOB_ID)", $_.ToString())
   }
 
-  $coveragereport=Path-Combine $PROJECT.artifacts, "coverage.xml"
+  $coveragereport=Path-Combine $PROJECT.artifacts, $coveragexml
  
   if (Test-Path $coveragereport) {
     Write-Host Uploading coverage report...
