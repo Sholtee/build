@@ -47,15 +47,15 @@ function Move-Directory([Parameter(Position = 0)][string] $src, [Parameter(Posit
   Move-Item -path $src -destination $dst -force | Out-Null
 }
 
-function Directory-Path([Parameter(Position = 0)][string] $path) {
+function Directory-Path([Parameter(Position = 0, Mandatory = $true)][string] $path) {
   return [System.IO.Path]::GetDirectoryName($path)
 }
 
-function Directory-Name([Parameter(Position = 0)][string] $path) {
+function Directory-Name([Parameter(Position = 0, Mandatory = $true)][string] $path) {
   return  (New-Object System.IO.DirectoryInfo -ArgumentList (Directory-Path $path)).Name
 }
 
-function Directory-Of([Parameter(Position = 0)][string] $filename) {
+function Directory-Of([Parameter(Position = 0, Mandatory = $true)][string] $filename) {
   $path=Path-Combine (Get-Location), $filename
   
   try {
@@ -68,7 +68,7 @@ function Directory-Of([Parameter(Position = 0)][string] $filename) {
   }    
 }
 
-function Is-NullOrEmpty([Parameter(Position = 0)][string]$string) { return [System.String]::IsNullOrEmpty($string) }
+function Is-NullOrEmpty([Parameter(Position = 0, Mandatory = $true)][string]$string) { return [System.String]::IsNullOrEmpty($string) }
 
 function Write-Log([Parameter(ValueFromPipeline)][string]$text, [Parameter(Position = 0)][string]$filename) {
   if (!(Is-NullOrEmpty $text)) {
@@ -89,7 +89,7 @@ function Attach-ToProcess([Parameter(Position = 0)][System.Diagnostics.Process]$
   }
 }
 
-function Exec([Parameter(Position = 0)][string]$command, [string]$commandArgs = $null, [switch]$redirectOutput, [switch]$noLog, [switch]$ignoreError) {
+function Exec([Parameter(Position = 0, Mandatory = $true)][string]$command, [string]$commandArgs = $null, [switch]$redirectOutput, [switch]$noLog, [switch]$ignoreError) {
   $startInfo = New-Object System.Diagnostics.ProcessStartInfo
   $startInfo.FileName = $command
   $startInfo.Arguments = $commandArgs
@@ -166,6 +166,8 @@ function Read-Project() {
       $hash[$_.Name]=$_.Value
     }
   }
+  
+  $hash.root=$root
   
   if ($hash.ContainsKey("commonprops")) { $propsPath=$hash.commonprops }
   else { $propsPath=$hash.app }

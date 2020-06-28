@@ -9,7 +9,7 @@ function Regular-Tests() {
 
   $opencover=Path-Combine (Get-Package "OpenCover" -Version "4.7.922"), "tools", "OpenCover.Console.exe" | Resolve-Path
 
-  Get-ChildItem -Path (Path-Combine "..", $PROJECT.tests) | foreach {
+  Get-ChildItem -Path (Path-Combine $PROJECT.root, $PROJECT.tests) | foreach {
     $resultsxml=Path-ChangeExtension $_.Name -Extension 'xml'
 	$coveragexml="coverage_$($resultsxml)"
   
