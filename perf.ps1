@@ -12,10 +12,10 @@ function Performance-Tests() {
   Remove-Directory $PROJECT.bin
   Create-Directory $PROJECT.bin
 
-  Exec "dotnet.exe" -commandArgs "build $(Resolve-Path $PROJECT.perftests) --framework $($PROJECT.perftarget) --configuration Perf --output `"$(Resolve-Path $PROJECT.bin)`""
+  Exec "dotnet.exe" -commandArgs "build `"$($PROJECT.solution | Resolve-Path)`" -c Perf"
 
   [XML]$csproj=Resolve-Path $PROJECT.perftests | Get-Content
-  $perfexe="$(($csproj.Project.PropertyGroup.AssemblyName | Out-String).Trim()).exe"
+  $perfexe=Get-ChildItem -path (Path-Combine ($PROJECT.bin | Resolve-Path), "$(($csproj.Project.PropertyGroup.AssemblyName | Out-String).Trim()).exe") -recurse
 
-  Exec "$(Path-Combine $PROJECT.bin, $perfexe | Resolve-Path)" -commandArgs "-f * -e GitHub -a `"$(Resolve-Path $artifacts)`"" -noLog
+  Exec $perfexe -commandArgs "-f * -e GitHub -a `"$(Resolve-Path $artifacts)`"" -noLog
 }

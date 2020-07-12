@@ -5,11 +5,9 @@
   "app": "\\SRC\\MyProject.csproj",
   "vendor": "\\Vendor",
   "tests": "\\Test\\*\\*.Tests.csproj",
-  "testtarget": "netcoreapp2.2",
   "artifacts": "\\Artifacts",
   "coveragefilter": "+[MyProject*]* -[MyProject.Tests]*",
   "perftests": "\\PERF\\MyProject.Perf.csproj",
-  "perftarget": "netcoreapp3.1",
   "docsbranch": "gh-pages",
   "CI": "AppVeyor"
 }
