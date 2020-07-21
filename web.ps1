@@ -1,5 +1,5 @@
 #
-# webtest.ps1
+# web.ps1
 #
 # Author: Denes Solti
 #
