@@ -89,14 +89,18 @@ function Attach-ToProcess([Parameter(Position = 0)][System.Diagnostics.Process]$
   }
 }
 
-function Exec([Parameter(Position = 0, Mandatory = $true)][string]$command, [string]$commandArgs = $null, [switch]$redirectOutput, [switch]$noLog, [switch]$ignoreError) {
+function Exec([Parameter(Position = 0, Mandatory = $true)][string]$command, [string]$commandArgs = $null, [string]$cwd = $null, [switch]$redirectOutput, [switch]$noLog, [switch]$ignoreError) {
   $startInfo = New-Object System.Diagnostics.ProcessStartInfo
   $startInfo.FileName = $command
   $startInfo.Arguments = $commandArgs
   $startInfo.UseShellExecute = $false
   $startInfo.RedirectStandardOutput = ($redirectOutput -Or !$noLog)
   $startInfo.RedirectStandardError = !$noLog 
-  $startInfo.WorkingDirectory = Get-Location
+  
+  if (!($cwd -is [string])) {
+    $cwd = Get-Location
+  }
+  $startInfo.WorkingDirectory = $cwd
 
   $process = New-Object System.Diagnostics.Process
   $process.StartInfo = $startInfo

@@ -9,5 +9,6 @@
   "coveragefilter": "+[MyProject*]* -[MyProject.Tests]*",
   "perftests": "\\PERF\\MyProject.Perf.csproj",
   "docsbranch": "gh-pages",
+  "web": "\\WEB",
   "CI": "AppVeyor"
 }

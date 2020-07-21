@@ -18,5 +18,10 @@ function Test() {
   } else {
     Write-Host Running regular tests...
     Regular-Tests
+	
+    if ($PROJECT.web -is [String]) {
+	  Write-Host Running WEB tests...
+	  Web-Tests
+    }
   }
 }
