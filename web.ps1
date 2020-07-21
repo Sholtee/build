@@ -10,8 +10,8 @@ function Invoke-NPM([Parameter(Position = 0, Mandatory = $true)][string] $arg) {
   }
 }
 
-function Web-Restore() { Invoke-NPM "install" }
+function Web-Restore() { Invoke-NPM "install --loglevel verbose" }
 
-function Web-Tests() { Invoke-NPM "test" }
+function Web-Tests() { Invoke-NPM "test --loglevel verbose" }
 
-function Web-PushResults() { Invoke-NPM "pushresults" }
+function Web-PushResults() { Invoke-NPM "pushresults --loglevel verbose" }
