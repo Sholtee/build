@@ -14,4 +14,4 @@ function Web-Restore() { Invoke-NPM "install" }
 
 function Web-Tests() { Invoke-NPM "test --loglevel verbose" }
 
-function Web-PushResults() { Invoke-NPM "pushresults --loglevel verbose" }
+function Web-PushResults() { Invoke-NPM "run pushresults --loglevel verbose" }
