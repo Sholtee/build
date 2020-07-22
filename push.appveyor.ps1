@@ -21,7 +21,7 @@ function Push-Test-Results() {
     Exec $coveralls -commandArgs "--opencover `"$($coveragereport)`" -r $Env:COVERALLS_REPO_TOKEN"
   }
 
-  if ($PROJECT.web is [string]) {
+  if ($PROJECT.web -is [string]) {
     Write-Host "Uploading WEB test results..."
     Web-PushResults
   }
