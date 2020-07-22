@@ -11,16 +11,16 @@ function Test() {
       $Env:LibVersion = $ver.Value
     }
 	
-    if($Env:LibVersion -is [String]) {$target = $Env:LibVersion} else {$target = "source"}
+    if($Env:LibVersion -is [string]) {$target = $Env:LibVersion} else {$target = "source"}
 	
     Write-Host "Running performance tests against $($target)..."	
     Performance-Tests
   } else {
-    Write-Host Running regular tests...
+    Write-Host "Running regular tests..."
     Regular-Tests
 	
-    if ($PROJECT.web -is [String]) {
-	  Write-Host Running WEB tests...
+    if ($PROJECT.web -is [string]) {
+	  Write-Host "Running WEB tests..."
 	  Web-Restore
 	  Web-Tests
     }

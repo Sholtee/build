@@ -20,6 +20,11 @@ function Push-Test-Results() {
     $coveralls=Path-Combine (Get-Package "coveralls.io" -Version "1.4.2"), "tools", "coveralls.net.exe" | Resolve-Path
     Exec $coveralls -commandArgs "--opencover `"$($coveragereport)`" -r $Env:COVERALLS_REPO_TOKEN"
   }
+
+  if ($PROJECT.web is [string]) {
+    Write-Host "Uploading WEB test results..."
+    Web-PushResults
+  }
 }
 
 function Push-Artifact([Parameter(Position = 0)][string]$pattern) {

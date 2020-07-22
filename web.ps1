@@ -5,12 +5,12 @@
 #
 
 function Invoke-NPM([Parameter(Position = 0, Mandatory = $true)][string] $arg) {
-  if (!(Is-NullOrEmpty $PROJECT.web)) {
+  if ($PROJECT.web is [string]) {
     Exec (Get-Command "npm").Path -commandArgs $arg -cwd ($PROJECT.web | Resolve-Path)
   }
 }
 
-function Web-Restore() { Invoke-NPM "install --loglevel verbose" }
+function Web-Restore() { Invoke-NPM "install" }
 
 function Web-Tests() { Invoke-NPM "test --loglevel verbose" }
 
