@@ -5,7 +5,7 @@
 #
 
 function Invoke-NPM([Parameter(Position = 0, Mandatory = $true)][string] $arg) {
-  if ($PROJECT.web -is [string]) {
+  if (!(Is-NullOrEmpty $PROJECT.web)) {
     Exec (Get-Command "npm").Path -commandArgs $arg -cwd ($PROJECT.web | Resolve-Path)
   }
 }

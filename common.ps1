@@ -68,7 +68,7 @@ function Directory-Of([Parameter(Position = 0, Mandatory = $true)][string] $file
   }    
 }
 
-function Is-NullOrEmpty([Parameter(Position = 0, Mandatory = $true)][string]$string) { return [System.String]::IsNullOrEmpty($string) }
+function Is-NullOrEmpty([Parameter(Position = 0)][string]$string) { return [System.String]::IsNullOrEmpty($string) }
 
 function Write-Log([Parameter(ValueFromPipeline)][string]$text, [Parameter(Position = 0)][string]$filename) {
   if (!(Is-NullOrEmpty $text)) {
@@ -97,7 +97,7 @@ function Exec([Parameter(Position = 0, Mandatory = $true)][string]$command, [str
   $startInfo.RedirectStandardOutput = ($redirectOutput -Or !$noLog)
   $startInfo.RedirectStandardError = !$noLog 
   
-  if (!($cwd -is [string])) {
+  if (Is-NullOrEmpty $cwd) {
     $cwd = Get-Location
   }
   $startInfo.WorkingDirectory = $cwd
