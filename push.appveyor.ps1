@@ -15,7 +15,7 @@ function Push-Test-Results() {
   $coveragereport=Path-Combine $PROJECT.artifacts, $coveragexml
  
   if (Test-Path $coveragereport) {
-    Write-Host Uploading coverage report...
+    Write-Host "Uploading coverage report..."
 
     $coveralls=Path-Combine (Get-Package "coveralls.io" -Version "1.4.2"), "tools", "coveralls.net.exe" | Resolve-Path
     Exec $coveralls -commandArgs "--opencover `"$($coveragereport)`" -r $Env:COVERALLS_REPO_TOKEN"
@@ -24,6 +24,8 @@ function Push-Test-Results() {
   if ($PROJECT.web -is [string]) {
     Write-Host "Uploading WEB test results..."
     Web-PushResults
+    Write-Host "Uploading WEB coverage report..."
+    Web-PushCoverage
   }
 }
 
