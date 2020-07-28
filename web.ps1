@@ -17,3 +17,8 @@ function Web-Tests() { Invoke-NPM "test --loglevel verbose" }
 function Web-PushResults() { Invoke-NPM "run pushresults --loglevel verbose" }
 
 function Web-PushCoverage() { Invoke-NPM "run pushcoverage --loglevel verbose" }
+
+function Web-PushPackage() { 
+  Out-File -FilePath (Path-Combine $PROJECT.web, ".npmrc") -Encoding UTF8 -InputObject "//registry.npmjs.org/:_authToken=$($Env:NPM_REPO_TOKEN)"
+  Invoke-NPM "publish --access public --loglevel verbose"
+}
