@@ -21,7 +21,6 @@ function Test() {
 	
     if ($PROJECT.web -is [string]) {
 	  Write-Host "Running WEB tests..."
-	  Web-Restore
 	  Web-Tests
     }
   }
