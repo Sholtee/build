@@ -4,6 +4,8 @@
 # Author: Denes Solti
 #
 function Push-Test-Results() {
+  if ($Env:APPVEYOR_REPO_TAG_NAME.StartsWith("perf")) { return }
+
   $client= New-Object System.Net.WebClient
   $coveragexml="coverage.xml"
 	
