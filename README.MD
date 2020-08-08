@@ -32,6 +32,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
   <ItemGroup>
     <None Remove="docfx.json" />
     <None Remove="index.md" />
+    <None Include="path\to\icon.png" Pack="true" PackagePath=""/>
   </ItemGroup>
   
   <PropertyGroup>
@@ -40,7 +41,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
     <Description>...</Description>
     <PackageId>...</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageIconUrl>https://github.com/YourName/YourProject/raw/master/icon.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageTags>...;...;...;</PackageTags>
     <PackageReleaseNotes>See homepage.</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
@@ -77,6 +78,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
   ```xml
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>YourProject.Perf</AssemblyName>
   </PropertyGroup>
