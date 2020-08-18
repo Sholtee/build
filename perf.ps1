@@ -12,7 +12,7 @@ function Performance-Tests() {
   Remove-Directory $PROJECT.bin
   Create-Directory $PROJECT.bin
 
-  Exec "dotnet.exe" -commandArgs "build `"$($PROJECT.solution | Resolve-Path)`" -c Perf"
+  Exec "dotnet.exe" -commandArgs "build `"$($PROJECT.perftests | Resolve-Path)`" -c Perf"
 
   [XML]$csproj=Resolve-Path $PROJECT.perftests | Get-Content
   $perfexe=Get-ChildItem -path (Path-Combine ($PROJECT.bin | Resolve-Path), "$(($csproj.Project.PropertyGroup.AssemblyName | Out-String).Trim()).exe") -recurse
