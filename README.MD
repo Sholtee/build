@@ -53,7 +53,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
 - Add/merge the followings to the `csproj` of your test project (under the `Project` node):
   ```xml
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <AssemblyName>YourProject.Tests</AssemblyName>
@@ -62,16 +62,11 @@ In the followings you MUST use the **SECURED** values of the tokens above
     <OutputType>Library</OutputType>
   </PropertyGroup>
   
-  <!--OpenCover requires .NET Core 2.2 while Test Explorer needs 3.X-->
-  <PropertyGroup Condition="'$(CI)'==''">
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="nunit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
-    <PackageReference Include="NunitXml.TestLogger" Version="2.1.41" />
+    <PackageReference Include="nunit" Version="3.*" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.*" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.*" />
+    <PackageReference Include="NunitXml.TestLogger" Version="3.*" />
   </ItemGroup> 
   ```
 - Add/merge the followings to the `csproj` of your benchmark project (under the `Project` node):
@@ -89,7 +84,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.11.*" />
     <PackageReference Condition="'$(LibVersion)' != ''" Include="YourProjectId" Version="$(LibVersion)"></PackageReference>
   </ItemGroup>
   
