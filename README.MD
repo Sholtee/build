@@ -74,7 +74,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>YourProject.Perf</AssemblyName>
   </PropertyGroup>
   
@@ -84,7 +84,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.11.*" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.*" />
     <PackageReference Condition="'$(LibVersion)' != ''" Include="YourProjectId" Version="$(LibVersion)"></PackageReference>
   </ItemGroup>
   
