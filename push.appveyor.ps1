@@ -20,7 +20,11 @@ function Push-Test-Results() {
     Write-Host "Uploading coverage report..."
 
     $coveralls=Path-Combine (Get-Package "coveralls.io" -Version "1.4.2"), "tools", "coveralls.net.exe" | Resolve-Path
-    Exec $coveralls -commandArgs "--opencover `"$($coveragereport)`" -r $($Env:COVERALLS_REPO_TOKEN)" -cwd (Resolve-Path "..")
+
+    $commandArgs="--opencover `"$($coveragereport)`" -r $($Env:COVERALLS_REPO_TOKEN)"
+    if ($Env:DEBUG_CI) { $commandArgs+=" -d" }
+
+    Exec $coveralls -commandArgs $commandArgs -cwd (Resolve-Path "..")
   }
 
   if ($PROJECT.web -is [string]) {
