@@ -32,15 +32,10 @@ function Push-Artifact([Parameter(Position = 0)][string]$pattern) {
 function Push-CoverageReports([Parameter(Position = 0)][string[]] $reports) {
   $coveralls=Path-Combine (Get-Package "coveralls.net" -Version "3.0.0" -IsTool), "csmacnz.Coveralls.exe" | Resolve-Path
 
-  $reports=Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*") -Include $reports
-  $i=$reports.Length
-  $reports | foreach {
-    $last=$i-- -EQ 0
-    Write-Host "Uploading coverage report: $($_.Name) [last: $($last)]"
-
-    $commandArgs="--$([System.IO.Path]::GetFileNameWithoutExtension($_.ToString())) -i $($_) --repoToken $($Env:COVERALLS_REPO_TOKEN) --useRelativePaths --commitId $($Env:APPVEYOR_REPO_COMMIT) --commitBranch $($Env:APPVEYOR_REPO_BRANCH) --commitAuthor $($Env:APPVEYOR_REPO_COMMIT_AUTHOR) --commitEmail $($Env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL) --commitMessage $($Env:APPVEYOR_REPO_COMMIT_MESSAGE) --jobId $($Env:APPVEYOR_BUILD_NUMBER) --serviceName appveyor --parallel"
-    if ($last) { $commandArgs+= "--completeParallelWork"}
-
-    Exec $coveralls -commandArgs $commandArgs -cwd (Resolve-Path "..")
+  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*") -Include $reports | foreach {
+    Write-Host "Uploading coverage report: $($_.Name)"
+    Exec $coveralls -commandArgs "--$([System.IO.Path]::GetFileNameWithoutExtension($_.ToString())) -i $($_) --repoToken $($Env:COVERALLS_REPO_TOKEN) --useRelativePaths --commitId $($Env:APPVEYOR_REPO_COMMIT) --commitBranch $($Env:APPVEYOR_REPO_BRANCH) --commitAuthor $($Env:APPVEYOR_REPO_COMMIT_AUTHOR) --commitEmail $($Env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL) --commitMessage $($Env:APPVEYOR_REPO_COMMIT_MESSAGE) --jobId $($Env:APPVEYOR_JOB_ID) --serviceName appveyor --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER) --parallel" -cwd (Resolve-Path "..")
   }
+
+  Exec $coveralls -commandArgs "--completeParallelWork --repoToken $($Env:COVERALLS_REPO_TOKEN) --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER)" -cwd (Resolve-Path "..")
 }
