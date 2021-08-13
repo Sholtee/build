@@ -33,7 +33,7 @@ function Push-CoverageReports([Parameter(Position = 0)][string[]] $reports) {
   $coveralls=Path-Combine (Get-Package "coveralls.net" -Version "3.0.0" -IsTool), "csmacnz.Coveralls.exe" | Resolve-Path
 
   $i=$reports.Length
-  Get-ChildItem -Path $PROJECT.artifacts -Include $reports | foreach {
+  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*") -Include $reports | foreach {
     $last=$i-- -EQ 0
     Write-Host "Uploading coverage report: $($_.Name) [last: $($last)]"
 
