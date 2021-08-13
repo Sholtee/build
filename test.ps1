@@ -15,7 +15,7 @@ function Regular-Tests() {
     $args="
       -target:`"$(Path-Combine $Env:ProgramFiles, 'dotnet', 'dotnet.exe')`"
       -targetargs:`"test $($_) --configuration:Debug --test-adapter-path:. --logger:nunit;LogFilePath=$(Path-Combine $PROJECT.artifacts, $resultsxml)`"
-      -output:`"$(Path-Combine $PROJECT.artifacts, 'coverage.xml')`"
+      -output:`"$(Path-Combine $PROJECT.artifacts, 'opencover.xml')`"
 	  -mergeoutput
       -oldStyle 
       -register:user 

@@ -8,7 +8,7 @@ function Push-Test-Results() {
 
   $client= New-Object System.Net.WebClient
 
-  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*.xml") -Exclude "coverage.xml" | foreach {
+  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*.xml") -Exclude "opencover.xml" | foreach {
     Write-Host "Uploading test result: $($_.Name)"
     $client.UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($Env:APPVEYOR_JOB_ID)", $_.ToString())
   }
@@ -18,7 +18,7 @@ function Push-Test-Results() {
     Web-PushResults
   }
 
-  Push-CoverageReports "coverage.xml", "lcov.info"
+  Push-CoverageReports "opencover.xml", "lcov.info"
 }
 
 function Push-Artifact([Parameter(Position = 0)][string]$pattern) {
@@ -38,9 +38,9 @@ function Push-CoverageReports([Parameter(Position = 0)][string[]] $reports) {
     $last=$i-- -EQ 0
     Write-Host "Uploading coverage report: $($_.Name) [last: $($last)]"
 
-    $commandArgs="--opencover -i $($_) --repoToken $($Env:COVERALLS_REPO_TOKEN) --useRelativePaths --commitId $($Env:APPVEYOR_REPO_COMMIT) --commitBranch $($Env:APPVEYOR_REPO_BRANCH) --commitAuthor $($Env:APPVEYOR_REPO_COMMIT_AUTHOR) --commitEmail $($Env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL) --commitMessage $($Env:APPVEYOR_REPO_COMMIT_MESSAGE) --jobId $($Env:APPVEYOR_BUILD_NUMBER) --serviceName appveyor --parallel"
+    $commandArgs="--$([System.IO.Path]::GetFileNameWithoutExtension($_.ToString())) -i $($_) --repoToken $($Env:COVERALLS_REPO_TOKEN) --useRelativePaths --commitId $($Env:APPVEYOR_REPO_COMMIT) --commitBranch $($Env:APPVEYOR_REPO_BRANCH) --commitAuthor $($Env:APPVEYOR_REPO_COMMIT_AUTHOR) --commitEmail $($Env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL) --commitMessage $($Env:APPVEYOR_REPO_COMMIT_MESSAGE) --jobId $($Env:APPVEYOR_BUILD_NUMBER) --serviceName appveyor --parallel"
     if ($last) { $commandArgs+= "--completeParallelWork"}
 
-    Exec $coveralls -commandArgs  -cwd (Resolve-Path "..")
+    Exec $coveralls -commandArgs $commandArgs -cwd (Resolve-Path "..")
   }
 }
