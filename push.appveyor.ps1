@@ -34,7 +34,7 @@ function Push-CoverageReports([Parameter(Position = 0)][string[]] $reports) {
 
   Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*") -Include $reports | foreach {
     Write-Host "Uploading coverage report: $($_.Name)"
-    Exec $coveralls -commandArgs "--$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)) -i `"$($_.FullName)`" --repoToken $($Env:COVERALLS_REPO_TOKEN) --commitId $($Env:APPVEYOR_REPO_COMMIT) --commitBranch $($Env:APPVEYOR_REPO_BRANCH) --commitAuthor `"$($Env:APPVEYOR_REPO_COMMIT_AUTHOR)`" --commitEmail $($Env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL) --commitMessage `"$($Env:APPVEYOR_REPO_COMMIT_MESSAGE)`" --jobId $($Env:APPVEYOR_JOB_ID) --serviceName appveyor --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER) --parallel" -cwd (Resolve-Path "..")
+    Exec $coveralls -commandArgs "--$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)) -i `"$($_.FullName)`" --repoToken $($Env:COVERALLS_REPO_TOKEN) --commitId $($Env:APPVEYOR_REPO_COMMIT) --commitBranch $($Env:APPVEYOR_REPO_BRANCH) --commitAuthor `"$($Env:APPVEYOR_REPO_COMMIT_AUTHOR)`" --commitEmail $($Env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL) --commitMessage `"$($Env:APPVEYOR_REPO_COMMIT_MESSAGE)`" --jobId $($Env:APPVEYOR_JOB_ID) --serviceName appveyor --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER) --parallel --useRelativePaths" -cwd (Resolve-Path "..")
   }
 
   Exec $coveralls -commandArgs "--completeParallelWork --repoToken $($Env:COVERALLS_REPO_TOKEN) --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER)" -cwd (Resolve-Path "..")
