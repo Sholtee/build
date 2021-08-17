@@ -6,17 +6,8 @@
 function Push-Test-Results() {
   if ($Env:APPVEYOR_REPO_TAG_NAME -is [string] -and $Env:APPVEYOR_REPO_TAG_NAME.StartsWith("perf")) { return }
 
-  $client= New-Object System.Net.WebClient
-
-  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*.xml") -Exclude "opencover.xml" | foreach {
-    Write-Host "Uploading test result: $($_.Name)"
-    $client.UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($Env:APPVEYOR_JOB_ID)", $_.FullName)
-  }
-
-  if ($PROJECT.web -is [string]) {
-    Write-Host "Uploading WEB test results..."
-    Web-PushResults
-  }
+  Push-TestResults "nunit"
+  Push-TestResults "junit"
 
   Push-CoverageReports "opencover.xml", "lcov.info"
 }
@@ -27,6 +18,15 @@ function Push-Artifact([Parameter(Position = 0)][string]$pattern) {
   if (!(Directory-Path $pattern | Test-Path)) { return }
   
   Get-ChildItem -path $pattern | foreach { Push-AppveyorArtifact $_.FullName }
+}
+
+function Push-TestResults([Parameter(Position = 0)][string] $type) {
+  $client= New-Object System.Net.WebClient
+
+  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, $type, "*.xml") | foreach {
+    Write-Host "Uploading [$($type)] test result: $($_.Name)"
+    $client.UploadFile("https://ci.appveyor.com/api/testresults/$($type)/$($Env:APPVEYOR_JOB_ID)", $_.FullName)
+  }
 }
 
 function Push-CoverageReports([Parameter(Position = 0)][string[]] $reports) {
