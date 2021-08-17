@@ -43,5 +43,8 @@ function Push-CoverageReports([Parameter(Position = 0)][string[]] $reports) {
     Exec $coveralls -commandArgs $commandArgs -cwd (Resolve-Path "..")
   }
 
-  Exec $coveralls -commandArgs "--completeParallelWork --repoToken $($Env:COVERALLS_REPO_TOKEN) --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER)" -cwd (Resolve-Path "..")
+  $commandArgs="--completeParallelWork --repoToken $($Env:COVERALLS_REPO_TOKEN) --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER)"
+  if ($Env:DEBUG_CI) { $commandArgs+=" -o `"$(Path-Combine $PROJECT.artifacts, "completeParallelWork.debug.json")`""}
+
+  Exec $coveralls -commandArgs $commandArgs -cwd (Resolve-Path "..")
 }
