@@ -31,17 +31,16 @@ function Push-TestResults([Parameter(Position = 0)][string] $type) {
 
 function Push-CoverageReports([Parameter(Position = 0)][string[]] $reports) {
   $coveralls=Path-Combine (Get-Package "coveralls.net" -Version "3.0.0" -IsTool), "csmacnz.Coveralls.exe" | Resolve-Path
+  $i=0
 
   Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*") -Include $reports | foreach {
     Write-Host "Uploading coverage report: $($_.Name)"
 
     $type=[System.IO.Path]::GetFileNameWithoutExtension($_.Name)
 
-    $commandArgs="--$($type) -i `"$($_.FullName)`" --repoToken $($Env:COVERALLS_REPO_TOKEN) --commitId $($Env:APPVEYOR_REPO_COMMIT) --commitBranch $($Env:APPVEYOR_REPO_BRANCH) --commitAuthor `"$($Env:APPVEYOR_REPO_COMMIT_AUTHOR)`" --commitEmail $($Env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL) --commitMessage `"$($Env:APPVEYOR_REPO_COMMIT_MESSAGE)`" --jobId $($Env:APPVEYOR_JOB_ID) --serviceName appveyor --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER) --parallel --useRelativePaths"
+    $commandArgs="--$($type) -i `"$($_.FullName)`" --repoToken $($Env:COVERALLS_REPO_TOKEN) --commitId $($Env:APPVEYOR_REPO_COMMIT) --commitBranch $($Env:APPVEYOR_REPO_BRANCH) --commitAuthor `"$($Env:APPVEYOR_REPO_COMMIT_AUTHOR)`" --commitEmail $($Env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL) --commitMessage `"$($Env:APPVEYOR_REPO_COMMIT_MESSAGE)`" --jobId $($Env:APPVEYOR_JOB_ID) --serviceName appveyor --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER).$($i++) --useRelativePaths"
     if ($Env:DEBUG_CI) { $commandArgs+=" -o `"$(Path-Combine $PROJECT.artifacts, "$($type).debug.json")`""}
 
     Exec $coveralls -commandArgs $commandArgs -cwd (Resolve-Path "..")
   }
-
-  Exec $coveralls -commandArgs "--completeParallelWork --repoToken $($Env:COVERALLS_REPO_TOKEN) --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER)" -cwd (Resolve-Path "..")
 }
