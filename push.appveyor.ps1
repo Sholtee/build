@@ -21,9 +21,12 @@ function Push-Artifact([Parameter(Position = 0)][string]$pattern) {
 }
 
 function Push-TestResults([Parameter(Position = 0)][string] $type) {
-  $client= New-Object System.Net.WebClient
+  $artifacts=Path-Combine $PROJECT.artifacts, $type
+  if (!(Test-Path $artifacts)) { return }
 
-  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, $type, "*.xml") | foreach {
+  $client=New-Object System.Net.WebClient
+
+  Get-ChildItem -Path (Path-Combine $artifacts, "*.xml") | foreach {
     Write-Host "Uploading [$($type)] test result: $($_.Name)"
     $client.UploadFile("https://ci.appveyor.com/api/testresults/$($type)/$($Env:APPVEYOR_JOB_ID)", $_.FullName)
   }
