@@ -45,8 +45,8 @@ function Push-CoverageReports([Parameter(Position = 0)][string[]] $reports) {
     $commandArgs="--$($type) -i `"$($_.FullName)`" --repoToken $($Env:COVERALLS_REPO_TOKEN) --commitId $($Env:APPVEYOR_REPO_COMMIT) --commitBranch $($Env:APPVEYOR_REPO_BRANCH) --commitAuthor `"$($Env:APPVEYOR_REPO_COMMIT_AUTHOR)`" --commitEmail $($Env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL) --commitMessage `"$($Env:APPVEYOR_REPO_COMMIT_MESSAGE)`" --jobId $($Env:APPVEYOR_JOB_ID).$($i) --serviceName appveyor --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER) --parallel --useRelativePaths"
     if ($Env:DEBUG_CI) { $commandArgs+=" -o `"$(Path-Combine $PROJECT.artifacts, "$($type).debug.json")`""}
 
-    Exec $coveralls -commandArgs $commandArgs -cwd (Resolve-Path "..")
+    Exec $coveralls -commandArgs $commandArgs -cwd (Resolve-Path "..") -ignoreError
   }
 
-  Exec $coveralls -commandArgs "--completeParallelWork --repoToken $($Env:COVERALLS_REPO_TOKEN) --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER)" -cwd (Resolve-Path "..")
+  Exec $coveralls -commandArgs "--completeParallelWork --repoToken $($Env:COVERALLS_REPO_TOKEN) --serviceNumber $($Env:APPVEYOR_BUILD_NUMBER)" -cwd (Resolve-Path "..") -ignoreError
 }
