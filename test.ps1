@@ -7,7 +7,7 @@ function Regular-Tests() {
   Remove-Directory $PROJECT.artifacts
   Create-Directory $PROJECT.artifacts
 
-  $opencover=Path-Combine (Get-Package "OpenCover" -Version "4.7.1138-rc"), "tools", "OpenCover.Console.exe" | Resolve-Path
+  $opencover=Path-Combine (Get-Package "OpenCover" -Version "4.7.1221"), "tools", "OpenCover.Console.exe" | Resolve-Path
 
   Get-ChildItem -Path (Path-Combine $PROJECT.root, $PROJECT.tests) | foreach {
     $resultsxml=Path-ChangeExtension $_.Name -Extension 'xml'
