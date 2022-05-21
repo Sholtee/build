@@ -53,7 +53,7 @@ In the followings you MUST use the **SECURED** values of the tokens above
 - Add/merge the followings to the `csproj` of your test project (under the `Project` node):
   ```xml
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <AssemblyName>YourProject.Tests</AssemblyName>

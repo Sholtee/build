@@ -17,8 +17,8 @@ function Remove-Directory([Parameter(Position = 0)][string[]] $path) {
   }
 }
 
-function Path-ChangeExtension([Parameter(Position = 0, Mandatory = $true)][string] $path, [Parameter(Mandatory=$true)][string] $extension) {
-  return [System.IO.Path]::ChangeExtension($path, $extension)
+function Path-GetFileNameWithoutExtension([Parameter(Position = 0, Mandatory = $true)][string] $path) {
+  return [System.IO.Path]::GetFileNameWithoutExtension($path)
 }
 
 function Path-Combine([Parameter(Position = 0)][string[]] $path) {
