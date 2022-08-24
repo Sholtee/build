@@ -142,7 +142,7 @@ function Exec([Parameter(Position = 0, Mandatory = $true)][string]$command, [str
     return
   }
 
-  if ($redirectOutput) { return $stdOut.ToString() }
+  if ($redirectOutput) { return $stdOut.Output.ToString() }
 }
 
 function Get-SysInfo() {
