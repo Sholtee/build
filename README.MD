@@ -44,9 +44,6 @@ In the followings you MUST use the **SECURED** values of the tokens above
     <PackageIcon>icon.png</PackageIcon>
     <PackageTags>...;...;...;</PackageTags>
     <PackageReleaseNotes>See homepage.</PackageReleaseNotes>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/YourName/YourProject</RepositoryUrl>
-    <RepositoryBranch>$(CurrentBranch)</RepositoryBranch>
   </PropertyGroup>  
   ```
 - Copy the [docfx.json](https://github.com/Sholtee/build/blob/master/templates/API/docfx.json ) and [index.md](https://raw.githubusercontent.com/Sholtee/build/master/templates/API/index.md ) to the source folder of your project (`SRC` by default). In `docfx.json` modify `csproj` name and title, in `index.md` modify the URLs.  
