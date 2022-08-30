@@ -21,18 +21,19 @@ function Regular-Tests() {
 
       $resultsxml="$(Path-GetFileNameWithoutExtension $csproj).$($targetFw).xml"
 
-      $args="
+      $cmdArgs="
         -target:`"$(Path-Combine $Env:ProgramFiles, 'dotnet', 'dotnet.exe')`"
         -targetargs:`"test $($csproj) --configuration:Debug --framework:$($targetFw) --test-adapter-path:. --logger:nunit;LogFilePath=$(Path-Combine $PROJECT.artifacts, 'nunit', $resultsxml)`"
         -output:`"$(Path-Combine $PROJECT.artifacts, 'opencover.xml')`"
         -mergeoutput
-        -oldStyle 
-        -register:user 
-        -excludebyattribute:*.ExcludeFromCoverage* 
+        -oldStyle
+        -register:user
+        -threshold:25
+        -excludebyattribute:*.ExcludeFromCoverage*
         -filter:`"$($PROJECT.coveragefilter)`"
       "
 
-      Exec $opencover -commandArgs $args
+      Exec $opencover -commandArgs $cmdArgs
     }
   }
 }
