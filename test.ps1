@@ -19,16 +19,16 @@ function Regular-Tests() {
     ($props.Project.PropertyGroup.TargetFrameworks | Out-String).Trim().Split(";") | foreach {
       $targetFw=$_
 
-      $resultsxml="$(Path-GetFileNameWithoutExtension $csproj).$($targetFw).xml"
+      $resultsxml="$(Path-GetFileNameWithoutExtension $csproj).$targetFw.xml"
 
       $cmdArgs="
         -target:`"$(Path-Combine $Env:ProgramFiles, 'dotnet', 'dotnet.exe')`"
-        -targetargs:`"test $($csproj) --configuration:Debug --framework:$($targetFw) --test-adapter-path:. --logger:nunit;LogFilePath=$(Path-Combine $PROJECT.artifacts, 'nunit', $resultsxml)`"
+        -targetargs:`"test $csproj --configuration:Debug --framework:$targetFw --test-adapter-path:. --logger:nunit;LogFilePath=$(Path-Combine $PROJECT.artifacts, 'nunit', $resultsxml)`"
         -output:`"$(Path-Combine $PROJECT.artifacts, 'opencover.xml')`"
         -mergeoutput
         -oldStyle
         -register:user
-        -threshold:25
+        -threshold:1
         -excludebyattribute:*.ExcludeFromCoverage*
         -filter:`"$($PROJECT.coveragefilter)`"
       "
