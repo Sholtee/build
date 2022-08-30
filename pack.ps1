@@ -11,5 +11,6 @@ function Pack() {
   Exec "dotnet.exe" -commandArgs $cmdArgs
   Exec "dotnet.exe" -commandArgs "$cmdArgs -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg"
 
-  return Get-ChildItem -Path (Path-Combine ($PROJECT.bin | Resolve-Path), "*") -Include "*.nupkg", "*.snupkg" -Recurse
+  # Return .nupkg only. .snupkg will also be published if it is present next to its primary package
+  return Get-ChildItem -Path (Path-Combine ($PROJECT.bin | Resolve-Path), "*") -Include "*.nupkg" -Recurse
 }
