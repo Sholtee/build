@@ -154,7 +154,7 @@ function Get-SysInfo() {
 }
 
 function Get-CoreVer() {
-  return (dir (Get-Command dotnet).Path.Replace("dotnet.exe", "shared\Microsoft.NETCore.App")).Name.Split([System.Environment]::NewLine) | Where { $_ -Match "^\d+.\d+.\d+$" }
+  return (Get-ChildItem (Get-Command dotnet).Path.Replace("dotnet.exe", "shared\Microsoft.NETCore.App")).Name.Split([System.Environment]::NewLine) | Where { $_ -Match "^\d+.\d+.\d+$" }
 }
 
 function Read-Project() {
@@ -176,9 +176,11 @@ function Read-Project() {
   if ($hash.ContainsKey("commonprops")) { $propsPath=$hash.commonprops }
   else { $propsPath=$hash.app }
 
-  [XML]$props=Get-Content $propsPath
-  $hash.version=($props.Project.PropertyGroup.Version | Out-String).Trim()
-  $hash.repo=($props.Project.PropertyGroup.RepositoryUrl | Out-String).Trim()
+  $hash.root=Directory-Path ($hash.solution | Resolve-Path)
+  $hash.version=(([XML] (Get-Content $propsPath)).Project.PropertyGroup.Version | Out-String).Trim()
+  $hash.repo=(Exec "git.exe" -cwd $hash.root -commandArgs "config --get remote.origin.url" -redirectOutput -noLog).Trim()
+  $hash.hash=(Exec "git.exe" -cwd $hash.root -commandArgs "rev-parse HEAD" -redirectOutput -noLog).Trim()
+  $hash.branch=(Exec "git.exe" -cwd $hash.root -commandArgs "rev-parse --abbrev-ref HEAD" -redirectOutput -noLog).Trim()
 
   return New-Object -TypeName PSObject -Property $hash
 }
