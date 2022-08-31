@@ -31,6 +31,7 @@ function Regular-Tests() {
         -threshold:1
         -excludebyattribute:*.ExcludeFromCoverage*
         -filter:`"$($PROJECT.coveragefilter)`"
+        -returntargetcode
       "
 
       Exec $opencover -commandArgs $cmdArgs
