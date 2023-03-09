@@ -163,7 +163,7 @@ function Read-Project() {
   $hash=@{}
 
   (Get-Content (Path-Combine $root, $json) -Raw | ConvertFrom-Json).PSObject.Properties | ForEach-Object {    
-    if ($_.Value.StartsWith([System.IO.Path]::DirectorySeparatorChar)) {
+    if ($_.Value -is [System.String] -and $_.Value.StartsWith([System.IO.Path]::DirectorySeparatorChar)) {
       # Don't use Path-Combine here! It can't handle if a path-part starts with directory separator.
       $hash[$_.Name]=Join-Path $root $_.Value
     } else {
@@ -173,8 +173,10 @@ function Read-Project() {
   
   $hash.root=$root
   
-  if ($hash.ContainsKey("commonprops")) { $propsPath=$hash.commonprops }
+  if ($hash.commonprops) { $propsPath=$hash.commonprops }
   else { $propsPath=$hash.app }
+
+  if ($hash.variants -isnot [System.Array]) { $hash.variants = @("default") }
 
   $hash.root=Directory-Path ($hash.solution | Resolve-Path)
   $hash.version=(([XML] (Get-Content $propsPath)).Project.PropertyGroup.Version | Out-String).Trim()

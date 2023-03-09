@@ -1,5 +1,6 @@
 {
   "bin": "\\BIN",
+  "variants": false,
   "solution": "\\MySolution.sln",
   "commonprops": "\\SRC\\Common.targets OR \\SRC\\MyProject.csproj",
   "app": "\\SRC\\MyProject.csproj",
