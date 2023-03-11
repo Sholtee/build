@@ -19,7 +19,7 @@ function Regular-Tests() {
       (Get-Prop $csproj -Property "TargetFrameworks" -GlobalProperties @{"Variant" = $variant} | Out-String).Trim().Split(";") | ForEach-Object {
         $targetFw=$_
 
-        if (!($PROJECT.skipon -contains $targetFw)) {
+        if (!($PROJECT.skipon -Contains $targetFw)) {
           $resultsxml="$(Path-GetFileNameWithoutExtension $csproj).$targetFw.$variant.xml"
 
           $cmdArgs="

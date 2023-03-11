@@ -6,11 +6,19 @@
 
 $sdks = dotnet --list-sdks
 $latestSDK = (
-	[System.Text.RegularExpressions.Regex]::Matches($sdks, "(\d+.\d+.\d+) \[(.*)\]") | Select-Object @{
-		Name = "Value";
-		Expression = { Join-Path $_.Groups[2].Value $_.Groups[1].Value }
-	} -Last 1
+	$sdks.Split([System.Environment]::NewLine) `
+		| Sort-Object `
+		| Select-Object @{
+			Name = "Match";
+			Expression = { [System.Text.RegularExpressions.Regex]::Match($_, "(\d+\.\d+\.\d+) \[(.*)\]") }
+		} `
+		| Where-Object {$_.Match.Success} `
+		| Select-Object @{
+		    Name = "Value";
+		    Expression = { Join-Path $_.Match.Groups[2].Value $_.Match.Groups[1].Value }
+		} -Last 1
 ).Value
+
 $msbuild = Join-Path $latestSDK "Microsoft.Build.dll"
 
 #Write-Host MSBuild DLL to be loaded: $msbuild

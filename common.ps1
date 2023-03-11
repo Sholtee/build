@@ -171,15 +171,10 @@ function Read-Project() {
     }
   }
   
-  $hash.root=$root
-  
-  if ($hash.commonprops) { $propsPath=$hash.commonprops }
-  else { $propsPath=$hash.app }
-
   if ($hash.variants -isnot [System.Array]) { $hash.variants = @("default") }
 
-  $hash.root=Directory-Path ($hash.solution | Resolve-Path)
-  $hash.version=(([XML] (Get-Content $propsPath)).Project.PropertyGroup.Version | Out-String).Trim()
+  $hash.root=$root
+  $hash.version=(Get-Prop $hash.app -Property "Version" | Out-String).Trim()
   $hash.repo=(Exec "git.exe" -cwd $hash.root -commandArgs "config --get remote.origin.url" -redirectOutput -noLog).Trim()
   $hash.hash=(Exec "git.exe" -cwd $hash.root -commandArgs "rev-parse HEAD" -redirectOutput -noLog).Trim()
   $hash.branch=(Exec "git.exe" -cwd $hash.root -commandArgs "rev-parse --abbrev-ref HEAD" -redirectOutput -noLog).Trim()
