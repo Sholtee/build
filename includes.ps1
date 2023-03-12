@@ -3,7 +3,8 @@
 #
 # Author: Denes Solti
 #
-. .\getprop.ps1 # common.ps1
+
+. .\getprop.ps1 # common.ps1 requires it
 . .\common.ps1
 . .\deploy.appveyor.ps1
 . .\docfx.ps1
