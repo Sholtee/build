@@ -25,11 +25,11 @@ function Regular-Tests() {
 
           if (!$targetFw.StartsWith('net4')) {
             $testCmd += " -property:CustomBeforeMicrosoftCSharpTargets=$('ExcludeFromCoverage.targets' | Resolve-Path)"
-            $coverageResult=Path-Combine $PROJECT.artifacts, "coverage_$targetFw.$variant.xml"
+            $coverageResult=Path-Combine $PROJECT.artifacts, "coverage_$targetFw.$variant.coverage"
 
-            Exec $coverageTool -commandArgs "collect --output-format xml --output `"$coverageResult`" `"dotnet $testCmd`""
+            Exec $coverageTool -commandArgs "collect --output-format coverage --output `"$coverageResult`" `"dotnet $testCmd`""
 
-            Exec $coverageTool -commandArgs "merge --output-format xml --output `"$(Path-Combine $PROJECT.artifacts, 'coverage.xml')`" --remove-input-files `"$coverageResult`""
+            Exec $coverageTool -commandArgs "merge --output-format coverage --output `"$(Path-Combine $PROJECT.artifacts, 'dynamiccodecoverage.coverage')`" --remove-input-files `"$coverageResult`""
           } else {
             # In .NET FW, ExcludeFromCodeCoverageAttribute cannot be placed on assemblies
             Exec 'dotnet' -commandArgs $testCmd

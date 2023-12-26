@@ -9,7 +9,7 @@ function Push-Test-Results() {
   Push-TestResults "nunit"
   Push-TestResults "junit"
 
-  Push-CoverageReports "coverage.xml", "lcov.info"
+  Push-CoverageReports "dynamiccodecoverage.coverage", "lcov.info"
 }
 
 function Push-Artifact([Parameter(Position = 0)][string]$pattern) {
