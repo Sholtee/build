@@ -20,20 +20,16 @@ function Regular-Tests() {
         $targetFw=$_
 
         if (!($PROJECT.skipon -Contains $targetFw)) {
+          Exec 'dotnet' -commandArgs "build $csproj --configuration:Debug --framework:$targetFw -property:variant=$variant"
+          
+          $binFolder=Join-Path $PROJECT.bin $targetFw
+          $filesToBeInstrumented=[string]::Join(',', ($PROJECT.coverage | Select-Object @{ Name = 'Value'; Expression = { "`"$(Join-Path $binFolder $_)`"" } } | Select-Object -ExpandProperty Value))
+
           $testResult=Path-Combine $PROJECT.artifacts, "nunit", "$(Path-GetFileNameWithoutExtension $csproj).$targetFw.$variant.xml"       
-          $testCmd="test $csproj --configuration:Debug --framework:$targetFw --test-adapter-path:. --logger:nunit;LogFilePath=$testResult -property:variant=$variant"
+          $coverageResult=Path-Combine $PROJECT.artifacts, "coverage_$targetFw.$variant.xml"
 
-          if (!$targetFw.StartsWith('net4')) {
-            $testCmd += " -property:CustomBeforeMicrosoftCSharpTargets=$('ExcludeFromCoverage.targets' | Resolve-Path)"
-            $coverageResult=Path-Combine $PROJECT.artifacts, "coverage_$targetFw.$variant.xml"
-
-            Exec $coverageTool -commandArgs "collect --output-format xml --output `"$coverageResult`" `"dotnet $testCmd`""
-
-            Exec $coverageTool -commandArgs "merge --output-format xml --output `"$(Path-Combine $PROJECT.artifacts, 'dynamiccodecoverage.xml')`" --remove-input-files `"$coverageResult`""
-          } else {
-            # In .NET FW, ExcludeFromCodeCoverageAttribute cannot be placed on assemblies
-            Exec 'dotnet' -commandArgs $testCmd
-          }
+          Exec $coverageTool -commandArgs "collect --include-files $filesToBeInstrumented --output-format xml --output `"$coverageResult`" `"dotnet test $csproj --no-build --no-restore --framework:$targetFw --test-adapter-path:. --logger:nunit;LogFilePath=$testResult`""
+          Exec $coverageTool -commandArgs "merge --output-format xml --output `"$(Path-Combine $PROJECT.artifacts, 'dynamiccodecoverage.xml')`" --remove-input-files `"$coverageResult`""
         }
       }
     }

@@ -5,6 +5,7 @@
   "app": "\\SRC\\MyProject.csproj",
   "vendor": "\\Vendor",
   "tests": "\\Test\\*\\*.Tests.csproj",
+  "coverage": ["MyProject.dll"],
   "skipon": ["netcoreapp2.0"],
   "artifacts": "\\Artifacts",
   "perftests": "\\PERF\\MyProject.Perf.csproj",
