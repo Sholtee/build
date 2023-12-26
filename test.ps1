@@ -27,9 +27,10 @@ function Regular-Tests() {
 
           $testResult=Path-Combine $PROJECT.artifacts, "nunit", "$(Path-GetFileNameWithoutExtension $csproj).$targetFw.$variant.xml"       
           $coverageResult=Path-Combine $PROJECT.artifacts, "coverage_$targetFw.$variant.xml"
+          $settings=Join-Path $PSScriptRoot 'coveragesettings.xml' | Resolve-Path
 
-          Exec $coverageTool -commandArgs "collect --include-files $filesToBeInstrumented --output-format xml --output `"$coverageResult`" `"dotnet test $csproj --no-build --no-restore --framework:$targetFw --test-adapter-path:. --logger:nunit;LogFilePath=$testResult`""
-          Exec $coverageTool -commandArgs "merge --output-format xml --output `"$(Path-Combine $PROJECT.artifacts, 'dynamiccodecoverage.xml')`" --remove-input-files `"$coverageResult`""
+          Exec $coverageTool -commandArgs "collect --settings $settings --include-files $filesToBeInstrumented --output `"$coverageResult`" `"dotnet test $csproj --no-build --no-restore --framework:$targetFw --test-adapter-path:. --logger:nunit;LogFilePath=$testResult`""
+          Exec $coverageTool -commandArgs "merge --output-format xml --output `"$(Join-Path $PROJECT.artifacts 'dynamiccodecoverage.xml')`" --remove-input-files `"$coverageResult`""
         }
       }
     }
