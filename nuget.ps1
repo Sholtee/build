@@ -8,9 +8,9 @@ function Get-Package([Parameter(Position = 0)][string]$packageName, [string]$ver
   Create-Directory $PROJECT.vendor
   
   if ($isTool) {
-    Exec "dotnet.exe" -commandArgs "tool install $($packageName) --version $($version) --tool-path `"$(Path-Combine $PROJECT.vendor, ('{0}.{1}' -F $packageName, $version))`""
+    Exec "dotnet.exe" -commandArgs "tool install $($packageName) --version $($version) --tool-path `"$(Path-Combine $PROJECT.vendor, ('{0}.{1}' -F $packageName, $version))`"" -ignoreError
   } else {
-    Exec "nuget.exe" -commandArgs "install $($packageName) -OutputDirectory `"$($PROJECT.vendor)`" -Version $($version)"
+    Exec "nuget.exe" -commandArgs "install $($packageName) -OutputDirectory `"$($PROJECT.vendor)`" -Version $($version)" -ignoreError
   }
 
   # Resolve-Path to verify package folder

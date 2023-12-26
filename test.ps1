@@ -7,7 +7,7 @@ function Regular-Tests() {
   Remove-Directory $PROJECT.artifacts
   Create-Directory $PROJECT.artifacts
 
-  $opencover=Path-Combine (Get-Package "OpenCover" -Version "4.7.1221"), "tools", "OpenCover.Console.exe" | Resolve-Path
+  $coverageTool=Path-Combine (Get-Package "dotnet-coverage" -Version "17.9.6" -IsTool), "dotnet-coverage.exe" | Resolve-Path
 
   $PROJECT.variants | ForEach-Object {
     $variant=$_
@@ -20,22 +20,20 @@ function Regular-Tests() {
         $targetFw=$_
 
         if (!($PROJECT.skipon -Contains $targetFw)) {
-          $resultsxml="$(Path-GetFileNameWithoutExtension $csproj).$targetFw.$variant.xml"
+          $testResult=Path-Combine $PROJECT.artifacts, "nunit", "$(Path-GetFileNameWithoutExtension $csproj).$targetFw.$variant.xml"       
+          $testCmd="test $csproj --configuration:Debug --framework:$targetFw --test-adapter-path:. --logger:nunit;LogFilePath=$testResult -property:variant=$variant"
 
-          $cmdArgs="
-            -target:`"$(Path-Combine $Env:ProgramFiles, 'dotnet', 'dotnet.exe')`"
-            -targetargs:`"test $csproj -property:variant=$variant --configuration:Debug --framework:$targetFw --test-adapter-path:. --logger:nunit;LogFilePath=$(Path-Combine $PROJECT.artifacts, 'nunit', $resultsxml)`"
-            -output:`"$(Path-Combine $PROJECT.artifacts, 'opencover.xml')`"
-            -mergeoutput
-            -oldStyle
-            -register:user
-            -threshold:1
-            -excludebyattribute:*.ExcludeFromCoverage*
-            -filter:`"$($PROJECT.coveragefilter)`"
-            -returntargetcode
-          "
+          if (!$targetFw.StartsWith('net4')) {
+            $testCmd += " -property:CustomBeforeMicrosoftCSharpTargets=$('ExcludeFromCoverage.targets' | Resolve-Path)"
+            $coverageResult=Path-Combine $PROJECT.artifacts, "coverage_$targetFw.$variant.xml"
 
-          Exec $opencover -commandArgs $cmdArgs
+            Exec $coverageTool -commandArgs "collect --output-format xml --output `"$coverageResult`" `"dotnet $testCmd`""
+
+            Exec $coverageTool -commandArgs "merge --output-format xml --output `"$(Path-Combine $PROJECT.artifacts, 'coverage.xml')`" --remove-input-files `"$coverageResult`""
+          } else {
+            # In .NET FW, ExcludeFromCodeCoverageAttribute cannot be placed on assemblies
+            Exec 'dotnet' -commandArgs $testCmd
+          }
         }
       }
     }

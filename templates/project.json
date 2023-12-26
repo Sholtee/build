@@ -8,7 +8,6 @@
   "skipon": ["netcoreapp2.0"],
   "testcommonprops": "\\Test\\Common.targets",
   "artifacts": "\\Artifacts",
-  "coveragefilter": "+[MyProject*]* -[MyProject.Tests]*",
   "perftests": "\\PERF\\MyProject.Perf.csproj",
   "docsbranch": "gh-pages",
   "web": "\\WEB",

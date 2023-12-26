@@ -30,9 +30,9 @@ if ( $PSVersionTable.PSVersion -lt [Version] "6.0") {
         Expression = { Join-Path $_.Match.Groups[2].Value $_.Match.Groups[1].Value }
 	  } -Last 1
   ).Value
-  if ($latestSDK -eq "") {
+  if ($latestSDK -eq $NULL) {
 	Write-Error ".NET SDK cannot be found"
-    exit
+    Exit
   }
   $msbuild = Join-Path $latestSDK "Microsoft.Build.dll"
 
