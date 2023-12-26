@@ -6,7 +6,6 @@
   "vendor": "\\Vendor",
   "tests": "\\Test\\*\\*.Tests.csproj",
   "skipon": ["netcoreapp2.0"],
-  "testcommonprops": "\\Test\\Common.targets",
   "artifacts": "\\Artifacts",
   "perftests": "\\PERF\\MyProject.Perf.csproj",
   "docsbranch": "gh-pages",
