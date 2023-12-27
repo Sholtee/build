@@ -47,6 +47,10 @@ function Move-Directory([Parameter(Position = 0)][string] $src, [Parameter(Posit
   Move-Item -path $src -destination $dst -force | Out-Null
 }
 
+function Full-Path([Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true)][string] $path) {
+  return [System.IO.Path]::GetFullPath($path)
+}
+
 function Directory-Path([Parameter(Position = 0, Mandatory = $true)][string] $path) {
   return [System.IO.Path]::GetDirectoryName($path)
 }
