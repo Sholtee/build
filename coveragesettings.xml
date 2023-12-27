@@ -6,7 +6,7 @@
     <ModulePaths>
       <Include />
       <Exclude>
-        <ModulePath>test</ModulePath>
+        <ModulePath>Test(S|Logger)</ModulePath>
       </Exclude>
     </ModulePaths>
 
