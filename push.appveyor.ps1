@@ -41,7 +41,7 @@ function Push-CoverageReports([Parameter(Position = 0, Mandatory = $true)][strin
   $i=0
 
   Get-ChildItem -Path ($artifacts, $filter) | foreach {
-    Write-Host "Uploading coverage report: $($_.Name)"
+    Write-Host "Uploading [$type] coverage report: $($_.Name)"
     $i+=1
     
     $commandArgs="--$type -i `"$($_.FullName)`" --repoToken $Env:COVERALLS_REPO_TOKEN --commitId $Env:APPVEYOR_REPO_COMMIT --commitBranch $Env:APPVEYOR_REPO_BRANCH --commitAuthor `"$Env:APPVEYOR_REPO_COMMIT_AUTHOR`" --commitEmail $Env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage `"$Env:APPVEYOR_REPO_COMMIT_MESSAGE`" --jobId $Env:APPVEYOR_JOB_ID.$i --serviceName appveyor --serviceNumber $Env:APPVEYOR_BUILD_NUMBER --parallel --useRelativePaths"
