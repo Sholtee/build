@@ -25,8 +25,10 @@ function Regular-Tests() {
           $binFolder=Join-Path (Directory-Path $csproj) (Get-Prop $csproj -Property "OutputPath" -GlobalProperties @{Variant=$variant; Configuration='Debug'} | Out-String).Trim() | Full-Path
           $filesToBeInstrumented=[string]::Join(',', ($PROJECT.coverage | Select-Object @{Name='Value'; Expression={"`"$(Join-Path $binFolder $_)`""}} | Select-Object -ExpandProperty Value))
 
-          $testResult=Path-Combine $PROJECT.artifacts, "nunit", "$(Path-GetFileNameWithoutExtension $csproj).$targetFw.$variant.xml"       
-          $coverageResult=Path-Combine $PROJECT.artifacts, "coverage_$targetFw.$variant.xml"
+          $outputXml = "$(Path-GetFileNameWithoutExtension $csproj).$targetFw.$variant.xml" 
+
+          $testResult=Path-Combine $PROJECT.artifacts, "nunit", $outputXml     
+          $coverageResult=Path-Combine $PROJECT.artifacts, "dynamiccodecoverage", $outputXml
 
           $settings=Join-Path $PROJECT.root 'coveragesettings.xml'
           if (!(Test-Path $settings)) {
@@ -34,7 +36,6 @@ function Regular-Tests() {
           }
 
           Exec $coverageTool -commandArgs "collect --settings $settings --include-files $filesToBeInstrumented --output `"$coverageResult`" `"dotnet test $csproj --no-build --no-restore --framework:$targetFw  -property:variant=$variant --test-adapter-path:. --logger:nunit;LogFilePath=$testResult`""
-          Exec $coverageTool -commandArgs "merge --output-format xml --output `"$(Join-Path $PROJECT.artifacts 'dynamiccodecoverage.xml')`" --remove-input-files `"$coverageResult`""
         }
       }
     }

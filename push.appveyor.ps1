@@ -9,10 +9,11 @@ function Push-Test-Results() {
   Push-TestResults "nunit"
   Push-TestResults "junit"
 
-  Push-CoverageReports "dynamiccodecoverage.xml", "lcov.info"
+  Push-CoverageReports "dynamiccodecoverage" -filter "*.xml"
+  Push-CoverageReports "lcov" -filter "lcov.info"
 }
 
-function Push-Artifact([Parameter(Position = 0)][string]$pattern) {
+function Push-Artifact([Parameter(Position = 0, Mandatory = $true)][string]$pattern) {
   $pattern=Path-Combine $PROJECT.artifacts, $pattern
 
   if (!(Directory-Path $pattern | Test-Path)) { return }
@@ -20,7 +21,7 @@ function Push-Artifact([Parameter(Position = 0)][string]$pattern) {
   Get-ChildItem -path $pattern | foreach { Push-AppveyorArtifact $_.FullName }
 }
 
-function Push-TestResults([Parameter(Position = 0)][string] $type) {
+function Push-TestResults([Parameter(Position = 0, Mandatory = $true)][string] $type) {
   $artifacts=Path-Combine $PROJECT.artifacts, $type
   if (!(Test-Path $artifacts)) { return }
 
@@ -32,16 +33,17 @@ function Push-TestResults([Parameter(Position = 0)][string] $type) {
   }
 }
 
-function Push-CoverageReports([Parameter(Position = 0)][string[]] $reports) {
+function Push-CoverageReports([Parameter(Position = 0, Mandatory = $true)][string] $type, [Parameter(Position = 1, Mandatory = $true)][string] $filter) {
+  $artifacts=Path-Combine $PROJECT.artifacts, $type
+  if (!(Test-Path $artifacts)) { return }
+
   $coveralls=Path-Combine (Get-Package "coveralls.net" -Version "4.0.1" -IsTool), "csmacnz.Coveralls.exe" | Resolve-Path
   $i=0
 
-  Get-ChildItem -Path (Path-Combine $PROJECT.artifacts, "*") -Include $reports | foreach {
+  Get-ChildItem -Path ($artifacts, $filter) | foreach {
     Write-Host "Uploading coverage report: $($_.Name)"
-
-    $type=[System.IO.Path]::GetFileNameWithoutExtension($_.Name)
     $i+=1
-
+    
     $commandArgs="--$type -i `"$($_.FullName)`" --repoToken $Env:COVERALLS_REPO_TOKEN --commitId $Env:APPVEYOR_REPO_COMMIT --commitBranch $Env:APPVEYOR_REPO_BRANCH --commitAuthor `"$Env:APPVEYOR_REPO_COMMIT_AUTHOR`" --commitEmail $Env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage `"$Env:APPVEYOR_REPO_COMMIT_MESSAGE`" --jobId $Env:APPVEYOR_JOB_ID.$i --serviceName appveyor --serviceNumber $Env:APPVEYOR_BUILD_NUMBER --parallel --useRelativePaths"
     if ($Env:DEBUG_CI) { $commandArgs+=" -o `"$(Path-Combine $PROJECT.artifacts, "$type.debug.json")`""}
 
