@@ -7,7 +7,7 @@ function Regular-Tests() {
   Remove-Directory $PROJECT.artifacts
   Create-Directory $PROJECT.artifacts
 
-  $coverageTool=Path-Combine (Get-Package "dotnet-coverage" -Version "17.9.6" -IsTool), "dotnet-coverage.exe" | Resolve-Path
+  $coverageTool=Path-Combine (Get-Package "dotnet-coverage" -Version "17.13.1" -IsTool), "dotnet-coverage.exe" | Resolve-Path
 
   $PROJECT.variants | ForEach-Object {
     $variant=$_
